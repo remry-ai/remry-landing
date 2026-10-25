@@ -16,14 +16,15 @@ public/
 
 ## Before launch
 
-Two placeholders are left in `public/index.html`; the deploy workflow warns while they remain:
+One placeholder is left in `public/index.html`, and the deploy workflow warns while it remains:
 
-- `[NEWSLETTER_URL]`: the newsletter's address, used by the footer form. The form submits `email`
-  to `[NEWSLETTER_URL]/subscribe`, which prefills Substack's subscribe page when the URL is a
-  Substack publication (`https://NAME.substack.com`). The hero's "Follow along" button links to
-  that form (`#subscribe`) and puts the cursor in the email box; share `remry.ai/#subscribe` for
-  the same.
 - `[STANDARD_PRICE]`: the standard Pro price, shown struck through beside the founding price.
+
+## Newsletter
+
+The footer form submits `email` to `https://blog.jweatherby.dev/subscribe`, Substack's subscribe
+page, with the address filled in. The hero's "Follow along" button links to that form
+(`#subscribe`) and puts the cursor in the email box; share `remry.ai/#subscribe` for the same.
 
 ## Run it locally
 

@@ -23,7 +23,7 @@ jobs:
 
       - name: Check for unfilled placeholders
         run: |
-          if grep -rnE '\[(NEWSLETTER_URL|STANDARD_PRICE)\]' public; then
+          if grep -rnE '\[(STANDARD_PRICE)\]' public; then
             echo "::warning::Placeholders remain in public/ (see README). Replace them before launch."
           fi
 
