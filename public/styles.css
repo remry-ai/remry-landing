@@ -156,8 +156,8 @@ code { font-family: var(--mono); font-size: 0.88em; overflow-wrap: anywhere; }
 .window-bar { display: flex; gap: 7px; padding: 11px 14px; border-bottom: 1px solid var(--night-border); }
 .window-bar span { width: 11px; height: 11px; border-radius: 50%; background: #3a414b; }
 .window video, .window img { width: 100%; aspect-ratio: 960 / 600; background: var(--night-2); }
+.demo-controls { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 8px; }
 .demo-toggle {
-  position: absolute; right: 12px; bottom: 12px;
   font: 600 0.8rem/1 var(--font); color: #fff;
   background: rgb(0 0 0 / 60%); border: 1px solid rgb(255 255 255 / 25%);
   border-radius: 999px; padding: 8px 12px; cursor: pointer;
@@ -325,3 +325,23 @@ code { font-family: var(--mono); font-size: 0.88em; overflow-wrap: anywhere; }
 .features p { color: var(--muted); margin: 0; }
 
 .hero-note { color: var(--night-text); font-weight: 600; margin: 0 0 4px; }
+
+/* Screenshots open full size when tapped */
+.zoom { display: block; margin-top: auto; cursor: zoom-in; }
+.case picture { margin-top: 0; }
+
+/* Phones: cropped screenshots and demo, shown edge to edge */
+@media (max-width: 640px) {
+  .demo { margin-top: 40px; }
+  .demo .window { margin: 0 -16px; border-radius: 0; border-left: 0; border-right: 0; }
+  .demo .window-bar { display: none; }
+  .window video, .window img { aspect-ratio: 840 / 600; }
+
+  .case { padding: 20px; }
+  .case .zoom { margin: 4px -20px -20px; }
+  .case img { border-radius: 0 0 var(--radius) var(--radius); border-width: 1px 0 0; }
+}
+@media (max-width: 640px) {
+  /* Keep the buttons off the "You → Claude" bubble at the bottom. */
+  .demo-controls { top: 10px; bottom: auto; right: 10px; }
+}
