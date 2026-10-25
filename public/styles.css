@@ -312,3 +312,14 @@ code { font-family: var(--mono); font-size: 0.88em; overflow-wrap: anywhere; }
 .notfound .lede { margin: 0 auto 28px; }
 
 #subscribe { scroll-margin-top: 80px; }
+
+/* The app */
+.app-shot { margin: 0 0 40px; }
+.app-shot img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.features {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 28px 32px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.features h3 { font-size: 1.05rem; margin-bottom: 4px; }
+.features p { color: var(--muted); margin: 0; }
