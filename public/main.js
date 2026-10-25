@@ -43,7 +43,7 @@
   const toggle = document.getElementById('demo-toggle');
   if (video && toggle) {
     toggle.hidden = false;
-    // Phones get a cropped demo (its <source> has a media query); match its poster.
+    // Phones get the demo recorded at phone width (its <source> has a media query); match its poster.
     if (window.matchMedia('(max-width: 640px)').matches) video.poster = '/images/demo-poster-m.webp';
     const sync = () => {
       const paused = video.paused;
@@ -56,17 +56,6 @@
     }
     toggle.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
 
-    // Phones: offer the demo full screen (landscape makes it much bigger).
-    const full = document.getElementById('demo-full');
-    const canFull = video.requestFullscreen || video.webkitEnterFullscreen;
-    if (full && canFull && window.matchMedia('(max-width: 640px)').matches) {
-      full.hidden = false;
-      full.addEventListener('click', () => {
-        video.play();
-        if (video.requestFullscreen) video.requestFullscreen().catch(() => {});
-        else video.webkitEnterFullscreen();
-      });
-    }
     video.addEventListener('play', sync);
     video.addEventListener('pause', sync);
     sync();

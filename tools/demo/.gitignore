@@ -1,0 +1,4 @@
+.data/
+.out/
+ids.json
+__pycache__/

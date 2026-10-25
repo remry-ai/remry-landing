@@ -52,7 +52,17 @@ Buy Pro clicks carry `data-track` names.
 
 ## Images
 
-The screenshots are 1600 and 800 px WebP (with a 1600 px PNG fallback) made from the 2560 px
-originals in `remry/docs/images`; `demo.mp4` is `demo.gif` re-encoded (about 40% smaller), with the
-GIF kept as a fallback. `og.png` (1200×630) is the share image, made from `splash.png`. When the
-app's screenshots change, copy them over and remake the sizes.
+The screenshots and demos are recorded from the real app, not copied from Remry's README, so
+they follow the current layout. `tools/demo/build.sh` remakes all of them:
+
+1. It fills a throwaway notebook (`tools/demo/.data`) with a demo team, using `seed.py`.
+2. It records each scene of the demo with Playwright: a prompt typed into a "You → Claude"
+   bubble, the change made with the Remry CLI (what Claude does over MCP), then the result
+   (`record.js`). This runs once at desktop size (1280×800) and once at phone size (390×660,
+   at 2x), so phones get a real phone recording rather than a crop.
+3. It takes the stills at both sizes (`shots.js`).
+4. It writes everything the page uses into `public/images` (`images.py`).
+
+It needs a Remry clone beside this repo (or `REMRY_REPO`) with `bun install` and
+`bunx prisma generate` run, plus Playwright, ffmpeg and Python 3 with Pillow. Run it after a
+UI change, check the images, and commit `public/images`.
