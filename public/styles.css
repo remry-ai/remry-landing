@@ -155,7 +155,7 @@ code { font-family: var(--mono); font-size: 0.88em; overflow-wrap: anywhere; }
 }
 .window-bar { display: flex; gap: 7px; padding: 11px 14px; border-bottom: 1px solid var(--night-border); }
 .window-bar span { width: 11px; height: 11px; border-radius: 50%; background: #3a414b; }
-.window video, .window img { width: 100%; aspect-ratio: 1280 / 800; background: var(--night-2); }
+.window video, .window img { width: 100%; aspect-ratio: 960 / 640; background: var(--night-2); }
 .demo-controls { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 8px; }
 .demo-toggle {
   font: 600 0.8rem/1 var(--font); color: #fff;

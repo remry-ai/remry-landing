@@ -31,19 +31,19 @@ const during = async (typing, work) => { const job = work(); await typing; retur
 // The bubble, caption and highlight, defined on every page load.
 const overlay = () => {
   const css = `
-    #ov { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); width: min(640px, calc(100vw - 24px));
-      background: #141414; color: #f4f4f5; border-radius: 12px; padding: 12px 16px; z-index: 2147483000;
-      font: 17px/1.45 Inter, system-ui, sans-serif; box-shadow: 0 12px 40px rgb(0 0 0 / 35%); display: none; }
-    #ov .lbl { font-size: 12px; letter-spacing: .06em; color: #a1a1aa; text-transform: uppercase; margin-bottom: 3px; }
+    #ov { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); width: min(760px, calc(100vw - 24px));
+      background: #141414; color: #f4f4f5; border-radius: 14px; padding: 14px 20px; z-index: 2147483000;
+      font: 20px/1.4 Inter, system-ui, sans-serif; box-shadow: 0 12px 40px rgb(0 0 0 / 35%); display: none; }
+    #ov .lbl { font-size: 13px; letter-spacing: .06em; color: #a1a1aa; text-transform: uppercase; margin-bottom: 3px; }
     #ov .you::after { content: '▍'; color: #a1a1aa; animation: b 1s steps(1) infinite; }
     #ov.done .you::after { content: ''; }
-    #ov .cl { display: none; border-top: 1px solid #2a2a2e; margin-top: 9px; padding-top: 8px; color: #d4d4d8; font-size: 16px; }
+    #ov .cl { display: none; border-top: 1px solid #2a2a2e; margin-top: 9px; padding-top: 8px; color: #d4d4d8; font-size: 18px; }
     #ov .cl b { color: #e8865f; margin-right: 6px; }
     #cap { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: #141414; color: #fafafa;
-      padding: 8px 14px; border-radius: 999px; font: 600 16px/1.2 Inter, system-ui, sans-serif; z-index: 2147483000;
+      padding: 8px 14px; border-radius: 999px; font: 600 18px/1.2 Inter, system-ui, sans-serif; z-index: 2147483000;
       display: none; white-space: nowrap; box-shadow: 0 8px 24px rgb(0 0 0 / 30%); }
     .ov-hl { outline: 3px solid #e8865f !important; outline-offset: 3px; border-radius: 8px; transition: outline-color .3s; }
-    @media (max-width: 500px) { #ov { font-size: 15px; } #ov .cl { font-size: 14px; } #cap { font-size: 14px; } }
+    @media (max-width: 500px) { #ov { font-size: 16px; padding: 12px 16px; } #ov .cl { font-size: 15px; } #cap { font-size: 15px; } }
     @keyframes b { 50% { opacity: 0; } }`;
   const mount = () => {
     if (document.getElementById('ov')) return;
@@ -69,10 +69,12 @@ const overlay = () => {
 
 (async () => {
   const browser = await chromium.launch();
-  // 1080×675 keeps the app's text near full size when the page shows the demo 960 wide.
-  const viewport = PHONE ? { width: 390, height: 660 } : { width: 1080, height: 675 };
+  // 960×640 is shown at its real size on the page. Below 1300px the left sidebar is a drawer
+  // (left collapsed); the right panel docks, widened so the page and the panel share the frame.
+  const viewport = PHONE ? { width: 390, height: 660 } : { width: 960, height: 640 };
   const ctx = await browser.newContext({ viewport, deviceScaleFactor: 2, isMobile: PHONE, hasTouch: PHONE, bypassCSP: true });
   await ctx.addInitScript(overlay);
+  if (!PHONE) await ctx.addInitScript(() => { try { localStorage.setItem('remry:panel-width', '380'); } catch { /* none */ } });
   const page = await ctx.newPage();
   // Playwright's own recorder captures CSS pixels, so this grabs 2x frames itself. Time spent
   // loading pages is left out (paused), so the video needs no speeding up.
@@ -154,7 +156,10 @@ const overlay = () => {
     remry('todo.create', { title: 'Chase Tom on the search index', priority: 1, entityType: 'PROJECT', entityId: ids['Search rewrite'] })]));
   await go(`/app/projects/${ids['Search rewrite']}`); await openRightPanel();
   await reply(prompt, 'Search rewrite is now blocked · added a note and a todo', 2600);
-  await go('/app/projects'); await caption(PHONE ? 'Every project and its status, at a glance' : 'Every project on one timeline, coloured by status'); await wait(3400);
+  await go('/app/projects');
+  // The timeline needs the width: close the panel here, and the peek opens it again.
+  if (!PHONE) { await page.locator('.drawer-toggle.right-toggle').click(); await wait(600); }
+  await caption(PHONE ? 'Every project and its status, at a glance' : 'Every project on one timeline, coloured by status'); await wait(3400);
   await go(`/app/projects?peek=${ids['Search rewrite']}`); await caption('Peek at a project without leaving the list'); await wait(3400);
   await caption('');
 
