@@ -60,8 +60,8 @@ they follow the current layout. `tools/demo/build.sh` remakes all of them:
    bubble, the change made with the Remry CLI (what Claude does over MCP), then the result
    (`record.js`). It grabs 2x frames itself, leaves out page loads, and runs in slow motion
    (animations included) so the capture keeps up; `frames.py` plays it back at speed, at 30 fps,
-   with a short crossfade at each cut. This runs once at desktop size (1020×680, shown 960 wide,
-   with the left drawer collapsed and the right panel widened) and once at phone size (390×660),
+   with a short crossfade at each cut. This runs once at desktop size (960×640, shown at its real size,
+   with the left drawer collapsed and the right panel widened to 360px) and once at phone size (390×660),
    so phones get a real phone recording rather than a crop.
 3. It takes the stills at both sizes (`shots.js`).
 4. It writes everything the page uses into `public/images` (`images.py`).
