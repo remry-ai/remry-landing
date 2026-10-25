@@ -77,7 +77,9 @@ const overlay = () => {
   const page = await ctx.newPage();
   const FRAMES = path.join(OUT, 'frames-phone');
   let capturing = PHONE; const shots = [];
-  const capture = PHONE && (async () => {
+  // Started once the first page has settled: on a phone the side panel slides shut as it loads.
+  let capture = null;
+  const startCapture = () => { if (PHONE) capture = (async () => {
     fs.rmSync(FRAMES, { recursive: true, force: true }); fs.mkdirSync(FRAMES, { recursive: true });
     const cdp = await ctx.newCDPSession(page);
     while (capturing) {
@@ -89,7 +91,7 @@ const overlay = () => {
         fs.writeFileSync(f, Buffer.from(r.data, 'base64')); shots.push({ f, t: Date.now() });
       } catch { await new Promise((res) => setTimeout(res, 30)); }
     }
-  })();
+  })(); };
   const wait = (ms) => page.waitForTimeout(ms);
   const go = async (p) => { await page.goto(BASE + p, { waitUntil: 'networkidle' }); await wait(400); };
   const type = async (text) => {
@@ -112,7 +114,7 @@ const overlay = () => {
   const days = (n) => new Date(Date.now() + n * 864e5).toISOString();
 
   // 1. An org change.
-  await go('/app/orgmap'); await wait(600);
+  await go('/app/orgmap'); await wait(1200); startCapture(); await wait(400);
   let prompt = 'Dana Park joined as a senior engineer, on Platform, reporting to Priya.';
   const dana = await during(type(prompt), async () => {
     const d = await remry('person.create', { name: 'Dana Park', extensions: { org: { title: 'Senior Engineer' } } });
