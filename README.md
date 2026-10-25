@@ -36,7 +36,7 @@ with Wrangler, creating the project on the first run. A push to `main` deploys p
 other branch gets a preview URL. It uses two repository secrets:
 
 - `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_KEY`: a Cloudflare **API token** with *Account → Cloudflare Pages → Edit*
+- `CLOUDFLARE_API_KEY` (or `CLOUDFLARE_API_TOKEN`): a Cloudflare **API token** with *Account → Cloudflare Pages → Edit*
   (Wrangler reads it as `CLOUDFLARE_API_TOKEN`). A legacy Global API Key won't work here.
 
 Once the project exists, attach the domain in the Cloudflare dashboard: Workers & Pages →
