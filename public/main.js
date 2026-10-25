@@ -68,3 +68,28 @@
     if (form instanceof HTMLFormElement && form.dataset.track && window.remryTrack) window.remryTrack(form.dataset.track);
   });
 })();
+
+// "Follow along" links jump to the footer signup and put the cursor in the email box.
+(() => {
+  const email = document.getElementById('email');
+  if (!email) return;
+  const focusEmail = () => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('subscribe').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    email.focus({ preventScroll: true });
+  };
+  document.querySelectorAll('a[href="#subscribe"]').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      history.replaceState(null, '', '#subscribe');
+      focusEmail();
+    }),
+  );
+  // A shared link to remry.ai/#subscribe lands on the form too.
+  if (location.hash === '#subscribe') {
+    // After the browser's own jump to the anchor, which would otherwise win.
+    const later = () => setTimeout(focusEmail, 50);
+    if (document.readyState === 'complete') later();
+    else window.addEventListener('load', later);
+  }
+})();
