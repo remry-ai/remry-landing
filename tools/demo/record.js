@@ -10,6 +10,7 @@ const path = require('path');
 const MODE = process.argv[2] || 'desktop';
 const OUT = process.argv[3] || '.';
 const PHONE = MODE === 'phone';
+const SLOW = MODE === 'phone' ? 1.5 : 2; // desktop frames are bigger, so slower to capture
 const BASE = 'http://127.0.0.1:5173';
 const DATA = path.join(__dirname, '.data');
 const REPO = process.env.REMRY_REPO || path.join(__dirname, '..', '..', '..', 'remry');
@@ -69,39 +70,48 @@ const overlay = () => {
 
 (async () => {
   const browser = await chromium.launch();
-  // 960×640 is shown at its real size on the page. Below 1300px the left sidebar is a drawer
-  // (left collapsed); the right panel docks, widened so the page and the panel share the frame.
-  const viewport = PHONE ? { width: 390, height: 660 } : { width: 960, height: 640 };
+  // 1110×740, shown 960 wide on the page: the app at about 86% size, with room for context.
+  // Below 1300px the left sidebar is a drawer (left collapsed); the right panel docks, widened
+  // so the page and the panel share the frame.
+  const viewport = PHONE ? { width: 390, height: 660 } : { width: 1110, height: 740 };
   const ctx = await browser.newContext({ viewport, deviceScaleFactor: 2, isMobile: PHONE, hasTouch: PHONE, bypassCSP: true });
   await ctx.addInitScript(overlay);
-  if (!PHONE) await ctx.addInitScript(() => { try { localStorage.setItem('remry:panel-width', '380'); } catch { /* none */ } });
+  if (!PHONE) await ctx.addInitScript(() => { try { localStorage.setItem('remry:panel-width', '400'); } catch { /* none */ } });
   const page = await ctx.newPage();
   // Playwright's own recorder captures CSS pixels, so this grabs 2x frames itself. Time spent
   // loading pages is left out (paused), so the video needs no speeding up.
   const FRAMES = path.join(OUT, `frames-${MODE}`);
-  let capturing = true; let paused = false; let pausedAt = 0; let skipped = 0; const shots = [];
-  let capture = null;
+  let capturing = true; let paused = false; let pausedAt = 0; let skipped = 0; let cut = false; const shots = [];
+  let capture = null; let capCdp = null;
   const startCapture = () => { capture = (async () => {
     fs.rmSync(FRAMES, { recursive: true, force: true }); fs.mkdirSync(FRAMES, { recursive: true });
-    const cdp = await ctx.newCDPSession(page);
+    const cdp = await ctx.newCDPSession(page); capCdp = cdp;
+    // The capture manages ~19 frames a second at 2x, so everything runs SLOW times slower
+    // (waits here, CSS animations in the page) and build.sh plays it back SLOW times faster.
+    await cdp.send('Animation.enable'); await cdp.send('Animation.setPlaybackRate', { playbackRate: 1 / SLOW });
     while (capturing) {
       if (paused) { await new Promise((res) => setTimeout(res, 15)); continue; }
       try {
         const v = (await cdp.send('Page.getLayoutMetrics')).cssVisualViewport;
-        const r = await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 90,
+        const r = await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 82,
           clip: { x: v.pageX, y: v.pageY, width: viewport.width, height: viewport.height, scale: 2 } });
         if (paused) continue;
         const f = path.join(FRAMES, `${String(shots.length).padStart(5, '0')}.jpg`);
-        fs.writeFileSync(f, Buffer.from(r.data, 'base64')); shots.push({ f, t: Date.now() - skipped });
+        fs.writeFileSync(f, Buffer.from(r.data, 'base64')); shots.push({ f, t: Date.now() - skipped, cut }); cut = false;
       } catch { await new Promise((res) => setTimeout(res, 30)); }
     }
   })(); };
   const pause = () => { paused = true; pausedAt = Date.now(); };
-  const resume = () => { skipped += Date.now() - pausedAt; paused = false; };
+  // A resume after a pause is a cut: build.sh crossfades it.
+  const resume = () => { skipped += Date.now() - pausedAt; paused = false; cut = true; };
   // Waiting on the CLI after the prompt is typed isn't shown either.
   pauseFor = async (p) => { pause(); try { return await p; } finally { resume(); } };
-  const wait = (ms) => page.waitForTimeout(ms);
-  const go = async (p) => { pause(); await page.goto(BASE + p, { waitUntil: 'networkidle' }); await wait(500); resume(); };
+  const wait = (ms) => page.waitForTimeout(ms * SLOW);
+  const go = async (p) => {
+    pause(); await page.goto(BASE + p, { waitUntil: 'networkidle' });
+    if (capCdp) await capCdp.send('Animation.setPlaybackRate', { playbackRate: 1 / SLOW }).catch(() => {});
+    await wait(500); resume();
+  };
   const type = async (text) => {
     await page.evaluate(() => window.__ov.show(''));
     for (let i = 1; i <= text.length; i++) { await page.evaluate((t) => window.__ov.set(t), text.slice(0, i)); await wait(32); }
@@ -201,9 +211,8 @@ const overlay = () => {
 
   fs.writeFileSync(path.join(__dirname, 'ids.json'), JSON.stringify(ids, null, 1));
   capturing = false; await capture;
-  // Each frame lasts until the next one: an ffmpeg concat list with the recorded timings.
-  const lines = shots.map((s, i) => `file '${s.f}'\nduration ${(((shots[i + 1] || s).t - s.t) / 1000 || 0.04).toFixed(3)}`);
-  fs.writeFileSync(path.join(OUT, `frames-${MODE}.txt`), lines.join('\n') + `\nfile '${shots[shots.length - 1].f}'\n`);
+  // frames.py turns this into the video's frame list, crossfading the cuts.
+  fs.writeFileSync(path.join(OUT, `frames-${MODE}.json`), JSON.stringify({ slow: SLOW, shots }));
   await ctx.close();
   await browser.close();
   console.log('recorded', MODE);
