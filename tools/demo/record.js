@@ -70,13 +70,13 @@ const overlay = () => {
 
 (async () => {
   const browser = await chromium.launch();
-  // 1110×740, shown 960 wide on the page: the app at about 86% size, with room for context.
+  // 1020×680, shown 960 wide on the page: the app at about 94% size, with a little room for context.
   // Below 1300px the left sidebar is a drawer (left collapsed); the right panel docks, widened
   // so the page and the panel share the frame.
-  const viewport = PHONE ? { width: 390, height: 660 } : { width: 1110, height: 740 };
+  const viewport = PHONE ? { width: 390, height: 660 } : { width: 1020, height: 680 };
   const ctx = await browser.newContext({ viewport, deviceScaleFactor: 2, isMobile: PHONE, hasTouch: PHONE, bypassCSP: true });
   await ctx.addInitScript(overlay);
-  if (!PHONE) await ctx.addInitScript(() => { try { localStorage.setItem('remry:panel-width', '400'); } catch { /* none */ } });
+  if (!PHONE) await ctx.addInitScript(() => { try { localStorage.setItem('remry:panel-width', '390'); } catch { /* none */ } });
   const page = await ctx.newPage();
   // Playwright's own recorder captures CSS pixels, so this grabs 2x frames itself. Time spent
   // loading pages is left out (paused), so the video needs no speeding up.
