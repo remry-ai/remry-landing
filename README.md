@@ -14,11 +14,10 @@ public/
 └── 404.html, robots.txt, sitemap.xml, favicons, icons/
 ```
 
-## Before launch
+## Pricing
 
-One placeholder is left in `public/index.html`, and the deploy workflow warns while it remains:
-
-- `[STANDARD_PRICE]`: the standard Pro price, shown struck through beside the founding price.
+Pro shows the founding price ($40 USD / $50 CAD a year, locked in while you renew) and the later
+price ($60 USD / $80 CAD) as a future price, not struck through, since no one has paid it yet.
 
 ## Newsletter
 
