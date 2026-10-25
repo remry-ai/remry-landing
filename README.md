@@ -58,8 +58,9 @@ they follow the current layout. `tools/demo/build.sh` remakes all of them:
 1. It fills a throwaway notebook (`tools/demo/.data`) with a demo team, using `seed.py`.
 2. It records each scene of the demo with Playwright: a prompt typed into a "You → Claude"
    bubble, the change made with the Remry CLI (what Claude does over MCP), then the result
-   (`record.js`). This runs once at desktop size (1280×800) and once at phone size (390×660,
-   at 2x), so phones get a real phone recording rather than a crop.
+   (`record.js`), at 2x with page loads left out. This runs once at desktop size (1080×675, so the
+   app's text shows near full size on the page) and once at phone size (390×660,
+   so phones get a real phone recording rather than a crop.
 3. It takes the stills at both sizes (`shots.js`).
 4. It writes everything the page uses into `public/images` (`images.py`).
 

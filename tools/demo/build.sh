@@ -6,9 +6,9 @@ set -e
 D=$(cd "$(dirname "$0")" && pwd); OUT=$D/.out; I=$D/../../public/images
 "$D/fresh.sh" && mkdir -p "$OUT" && node "$D/record.js" desktop "$OUT"
 "$D/fresh.sh" && node "$D/record.js" phone "$OUT" && node "$D/shots.js" "$OUT"
-# 1.3x speed trims the page loads.
-ffmpeg -loglevel error -y -i "$OUT/demo-desktop.webm" -vf "setpts=PTS/1.3,fps=25,scale=1280:800:flags=lanczos" -an -movflags +faststart -pix_fmt yuv420p -c:v libx264 -crf 24 -preset slow -tune stillimage "$I/demo.mp4"
-ffmpeg -loglevel error -y -f concat -safe 0 -i "$OUT/frames-phone.txt" -vf "setpts=PTS/1.3,fps=25,format=yuv420p" -an -movflags +faststart -c:v libx264 -crf 25 -preset slow -tune stillimage "$I/demo-m.mp4"
+# Both are 2x frames with page loads left out (record.js), stitched at their recorded timings.
+ffmpeg -loglevel error -y -f concat -safe 0 -i "$OUT/frames-desktop.txt" -vf "fps=25,scale=1920:1200:flags=lanczos,format=yuv420p" -an -movflags +faststart -c:v libx264 -crf 26 -preset slow -tune stillimage "$I/demo.mp4"
+ffmpeg -loglevel error -y -f concat -safe 0 -i "$OUT/frames-phone.txt" -vf "fps=25,format=yuv420p" -an -movflags +faststart -c:v libx264 -crf 25 -preset slow -tune stillimage "$I/demo-m.mp4"
 ffmpeg -loglevel error -y -i "$I/demo.mp4" -vf "fps=8,scale=800:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=64[p];[b][p]paletteuse=dither=none" "$I/demo.gif"
 ffmpeg -loglevel error -y -ss 0.8 -i "$I/demo.mp4" -frames:v 1 "$OUT/poster.png"
 ffmpeg -loglevel error -y -ss 0.8 -i "$I/demo-m.mp4" -frames:v 1 "$OUT/poster-m.png"
