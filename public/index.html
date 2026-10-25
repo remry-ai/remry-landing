@@ -95,13 +95,12 @@
             <div class="window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
             <video id="demo-video" autoplay muted loop playsinline preload="metadata"
                    width="960" height="600" poster="/images/demo-poster.webp"
-                   aria-describedby="demo-caption">
+                   aria-label="A tour of Remry: Claude adds a new hire, a note and a todo, the projects timeline, a goal check-in, a wiki page, and a doc with charts.">
               <source src="/images/demo.mp4" type="video/mp4">
               <img src="/images/demo.gif" width="960" height="600" alt="A tour of Remry: Claude adds a new hire, a note and a todo, the projects timeline, a goal check-in, a wiki page, and a doc with charts.">
             </video>
             <button class="demo-toggle" id="demo-toggle" type="button" aria-pressed="false" hidden>Pause</button>
           </div>
-          <figcaption id="demo-caption">Telling Claude about a new hire, then a note and a todo on a person and a project, the projects timeline, a goal check-in, a wiki page, and a doc with charts.</figcaption>
         </figure>
       </div>
     </section>
@@ -110,8 +109,7 @@
     <section class="section problem" aria-labelledby="problem-title">
       <div class="wrap narrow">
         <h2 id="problem-title">You carry a lot in your head.</h2>
-        <p class="big">Who reports to whom. Which team owns which project. Where a goal stands this month. Why you chose that vendor. What you promised to follow up on after a 1:1.</p>
-        <p class="big muted">Your team's tools hold the team's version of things. Yours is spread across your memory, a few docs and whatever you wrote down last time.</p>
+        <p class="big">Who reports to whom, which team owns what, where each goal stands, why you chose that vendor, what you promised after the last 1:1. <span class="muted">Your team’s tools don’t hold your version of it.</span></p>
       </div>
     </section>
 
@@ -122,19 +120,19 @@
         <ol class="beats">
           <li>
             <h3>You talk, Claude files.</h3>
-            <p>Say “Dana moved from Platform to Payments” and Claude makes the change. There is no form to fill in, and the app doesn’t need to be open.</p>
+            <p>Say “Dana moved from Platform to Payments” and Claude makes the change. No forms.</p>
           </li>
           <li>
             <h3>It doesn’t forget.</h3>
-            <p>What you tell it is stored as you said it, not summarised into a memory that fades. Claude looks it up instead of trying to recall it.</p>
+            <p>It’s stored as you said it, not summarised into a memory that fades. Claude looks it up instead of recalling it.</p>
           </li>
           <li>
             <h3>It keeps the shape of things.</h3>
-            <p>A person has a manager, a project has an owner, a goal has dated check-ins. So “what depends on the payments API?” gets the same answer every time, not a search result.</p>
+            <p>People have managers, projects have owners, goals have dated check-ins. So “what depends on the payments API?” gets the same answer every time.</p>
           </li>
           <li>
             <h3>Nothing leaves your computer.</h3>
-            <p>No accounts, no keys, no sync. Your notebooks live in a folder on your Mac or PC, and you read them in an app beside Claude.</p>
+            <p>Your notebooks live in a folder on your Mac or PC. You read them in an app beside Claude.</p>
           </li>
         </ol>
       </div>
@@ -148,7 +146,7 @@
           <article class="case">
             <h3>An org change</h3>
             <blockquote><span class="you">You:</span> Dana Park joined as a senior engineer, on Platform, reporting to Alice.</blockquote>
-            <p>Claude adds Dana, sets the reporting line and puts her on the team. Redrawing a reorganisation? Edit the org map by hand.</p>
+            <p>Claude adds Dana, sets her lead and team. For a reorg, edit the org map by hand.</p>
             <picture>
               <source type="image/webp" srcset="/images/org-map-800.webp 800w, /images/org-map-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
               <img src="/images/org-map-1600.png" width="1600" height="1000" loading="lazy" decoding="async"
@@ -159,7 +157,7 @@
           <article class="case">
             <h3>After a 1:1</h3>
             <blockquote><span class="you">You:</span> Note that Dana wants to lead the migration — she’d change the on-call rotation first. Remind me to book a 1:1.</blockquote>
-            <p>The note goes on Dana’s page in your words, with the date, and the reminder becomes a todo. Months later, “what do I know about Dana?” brings back her notes, todos, docs and goals.</p>
+            <p>The note lands on Dana’s page, dated, and the reminder becomes a todo. Months later, “what do I know about Dana?” brings it all back.</p>
             <picture>
               <source type="image/webp" srcset="/images/person-800.webp 800w, /images/person-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
               <img src="/images/person-1600.png" width="1600" height="775" loading="lazy" decoding="async"
@@ -170,7 +168,7 @@
           <article class="case">
             <h3>Goals with real numbers</h3>
             <blockquote><span class="you">You:</span> Platform’s H2 goal is p95 latency under 200ms, from 480. We’re at 310 now.</blockquote>
-            <p>Each check-in adds to the goal’s history instead of overwriting a number. The chart shows the pace you need, and a goal that trails it is flagged “Behind pace”.</p>
+            <p>Each check-in adds to the history instead of overwriting it, and a goal that trails its pace is flagged “Behind pace”.</p>
             <picture>
               <source type="image/webp" srcset="/images/goal-800.webp 800w, /images/goal-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
               <img src="/images/goal-1600.png" width="1600" height="1125" loading="lazy" decoding="async"
@@ -181,7 +179,7 @@
           <article class="case">
             <h3>Writing up the quarter</h3>
             <blockquote><span class="you">You:</span> Write up Platform’s quarter as a doc — delivery and reliability, with charts.</blockquote>
-            <p>Claude builds it from what’s already in the notebook. Docs are markdown with charts drawn from figures you give Claude, and export to PDF with Remry&nbsp;Pro.</p>
+            <p>Claude builds it from what’s already in the notebook, charts included. Export to PDF with Pro.</p>
             <picture>
               <source type="image/webp" srcset="/images/doc-charts-800.webp 800w, /images/doc-charts-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
               <img src="/images/doc-charts-1600.png" width="1600" height="1025" loading="lazy" decoding="async"
@@ -199,11 +197,11 @@
         <dl class="compare">
           <div>
             <dt>…your assistant’s own memory?</dt>
-            <dd>It decides what to keep and summarises it. Remry keeps exactly what you said, where you can see it.</dd>
+            <dd>It decides what to keep and summarises it. Remry keeps what you said, where you can see it.</dd>
           </div>
           <div>
             <dt>…a memory server, like Basic Memory?</dt>
-            <dd>Those store free text and links. Remry knows what a person, project and goal are, and turns away input that doesn’t fit. That’s why it can answer “which goals are behind pace?” instead of searching for the word “goal”. It also has an app to read it in.</dd>
+            <dd>Those store free text. Remry knows what a person, project and goal are, so it can answer “which goals are behind pace?” instead of searching for the word “goal”.</dd>
           </div>
           <div>
             <dt>…Obsidian, Notion or Apple Notes with an assistant connected?</dt>
@@ -211,7 +209,7 @@
           </div>
           <div>
             <dt>…Linear, Notion or Lattice?</dt>
-            <dd>Those hold the team’s shared version. Remry holds yours, privately, and links back to them. Ask Claude to bring a project in and it copies what matters to you and updates the same entry next time.</dd>
+            <dd>Those hold the team’s shared version. Remry holds yours, privately, and links back to them.</dd>
           </div>
         </dl>
       </div>
@@ -221,27 +219,26 @@
     <section class="section dark" aria-labelledby="privacy-title">
       <div class="wrap">
         <h2 id="privacy-title">Private by design</h2>
-        <p class="section-lede">Notes about your team are sensitive. Remry is built so they never leave your computer.</p>
         <ul class="trust">
           <li>
             <h3>Local only</h3>
-            <p>Your notebooks are files in a folder on your computer. No cloud sync. Remry copies each notebook every hour when something changed, on the same disk.</p>
+            <p>Files on your computer, with hourly backups. No cloud sync.</p>
           </li>
           <li>
             <h3>No accounts</h3>
-            <p>No sign-up, no keys, nothing to log in to. Work and home can be separate notebooks, and nothing links across them.</p>
+            <p>Nothing to sign up for or log in to.</p>
           </li>
           <li>
             <h3>The app never calls a model</h3>
-            <p>Claude works on your notebook from outside. The only request the app makes is the desktop app asking GitHub for updates, and it sends nothing about you or your notebooks.</p>
+            <p>Claude works on it from outside. The app’s only request is checking GitHub for updates.</p>
           </li>
           <li>
             <h3>Offline license key</h3>
-            <p>A Pro key is checked on your computer. Remry never contacts a license server.</p>
+            <p>Checked on your computer. No license server.</p>
           </li>
           <li>
             <h3>30-day refunds</h3>
-            <p>Not for you? Ask within 30 days for a refund.</p>
+            <p>Not for you? Ask within 30 days.</p>
           </li>
         </ul>
       </div>
@@ -251,7 +248,6 @@
     <section class="section" id="pricing" aria-labelledby="pricing-title">
       <div class="wrap">
         <h2 id="pricing-title">Pricing</h2>
-        <p class="section-lede">Remry is free. Pro adds three features for people who live in it.</p>
         <div class="plans">
           <article class="plan">
             <h3>Free</h3>
@@ -268,19 +264,19 @@
           </article>
 
           <article class="plan plan-pro">
-            <h3>Pro <span class="tag">Founding price</span></h3>
+            <h3>Pro</h3>
             <p class="price">
               <span class="amount">$40</span> <span class="per">USD / year</span>
               <span class="price-cad">or $50 CAD / year</span>
             </p>
             <p class="price-note">Founding price, locked in while you renew. Goes to $60 USD / $80 CAD later.</p>
             <ul class="checks">
-              <li><strong>Full-text search</strong> across notes, docs, wiki pages, todos and comments, and “what do I know about X” from Claude</li>
-              <li><strong>Branding:</strong> your organisation’s colours and icon, in the app and on what you print</li>
+              <li><strong>Full-text search</strong> across notes, docs, pages and todos, and “what do I know about X” from Claude</li>
+              <li><strong>Branding:</strong> your organisation’s colours and icon, on screen and in print</li>
               <li><strong>PDF export</strong> of docs and wiki pages</li>
             </ul>
             <a class="btn btn-primary" href="https://buy.stripe.com/bJefZg54rbNLa0H1sb0Jq01" data-track="buy-pro">Buy Remry Pro</a>
-            <p class="fine">Stripe runs the checkout, sales tax and receipts. Your key is shown after you pay and emailed to you. If a license lapses, those three features lock; nothing else changes and no data is lost.</p>
+            <p class="fine">Checkout by Stripe. Your key is shown after you pay and emailed to you.</p>
           </article>
         </div>
       </div>
@@ -293,7 +289,6 @@
         <ol class="steps">
           <li>
             <h3>Download the app</h3>
-            <p>It brings everything it needs and updates itself.</p>
             <div class="dl-buttons">
               <a class="btn btn-primary" href="https://github.com/remry-ai/remry/releases/latest/download/Remry-macos-arm64.dmg" data-track="download-mac" data-platform="mac">Mac (Apple silicon)</a>
               <a class="btn btn-ghost" href="https://github.com/remry-ai/remry/releases/latest/download/Remry-windows-x64-setup.exe" data-track="download-windows" data-platform="windows">Windows</a>
@@ -301,11 +296,11 @@
           </li>
           <li>
             <h3>Connect Claude</h3>
-            <p>In Cowork, add the Remry plugin from <strong>Customize</strong>. Or use the app’s <strong>Claude</strong> menu to connect Claude desktop or Claude&nbsp;Code. <a href="https://github.com/remry-ai/remry/blob/main/docs/INSTALL.md#2-connect-claude">Step-by-step guide</a></p>
+            <p>Add the Remry plugin in Cowork’s <strong>Customize</strong>, or use the app’s <strong>Claude</strong> menu. <a href="https://github.com/remry-ai/remry/blob/main/docs/INSTALL.md#2-connect-claude">Guide</a></p>
           </li>
           <li>
-            <h3>Tell Claude something</h3>
-            <p>Try <em>“Dana Park joined Platform as a senior engineer, reporting to Alice.”</em> Then open Remry and look.</p>
+            <h3>Tell Claude about your team</h3>
+            <p>Then open Remry and look.</p>
           </li>
         </ol>
       </div>
@@ -318,27 +313,23 @@
         <div class="faq">
           <details>
             <summary>Which assistants does it work with?</summary>
-            <p>Claude, today: Claude desktop (Chat and Cowork) and Claude&nbsp;Code. The Remry plugin brings the tools Claude uses and a skill that teaches it how the notebook works. Run Cowork sessions on your computer, not in the cloud, so Claude can reach your notebook.</p>
+            <p>Claude, today: Claude desktop (Chat and Cowork) and Claude&nbsp;Code. Run Cowork sessions on your computer, not in the cloud, so Claude can reach your notebook.</p>
           </details>
           <details>
             <summary>Which platforms does it run on?</summary>
-            <p>Macs with Apple silicon, and Windows (x64). The Mac app is signed and notarized by Apple, so it opens like any other app. The Windows installer isn’t code-signed yet, so the first time you run it Windows warns you: choose <strong>More info → Run anyway</strong>.</p>
-          </details>
-          <details>
-            <summary>Do I need to be a developer?</summary>
-            <p>No. Download the app, open it once, and connect Claude from Cowork’s <strong>Customize</strong> panel or the app’s <strong>Claude</strong> menu. After that you talk to Claude as usual.</p>
+            <p>Apple silicon Macs and Windows (x64). The Windows installer isn’t signed yet, so Windows warns the first time: choose <strong>More info → Run anyway</strong>.</p>
           </details>
           <details>
             <summary>What happens if my Pro license lapses?</summary>
-            <p>Full-text search, branding and PDF export lock. Nothing else changes and no data is lost; a renewed key brings it all back.</p>
+            <p>Search, branding and PDF export lock. Nothing else changes and no data is lost.</p>
           </details>
           <details>
             <summary>Where is my data?</summary>
-            <p>In a folder on your computer: <code>~/Library/Application Support/Remry/</code> on a Mac, <code>%LOCALAPPDATA%\Remry\</code> on Windows. Your notebooks stay there when the app updates, and if you uninstall it. Hourly copies stay on the same disk; on a Mac, Time Machine covers them against losing the disk.</p>
+            <p><code>~/Library/Application Support/Remry/</code> on a Mac, <code>%LOCALAPPDATA%\Remry\</code> on Windows. It stays there if you uninstall.</p>
           </details>
           <details>
             <summary>Who makes it?</summary>
-            <p>Remry is one person’s tool, built in the open by <a href="https://jweatherby.dev">jweatherby.dev</a>. Expect it to change.</p>
+            <p>One person, <a href="https://jweatherby.dev">jweatherby.dev</a>, building in the open. Expect it to change.</p>
           </details>
         </div>
       </div>
@@ -349,7 +340,7 @@
     <div class="wrap footer-grid">
       <div class="newsletter" id="subscribe">
         <h2 id="footer-title">Not ready to install?</h2>
-        <p>Follow along for new releases and how people use Remry.</p>
+        <p>Follow along by email.</p>
         <!-- Opens the newsletter's Substack subscribe page with the email filled in. -->
         <form class="subscribe" action="https://blog.jweatherby.dev/subscribe" method="get" data-track="newsletter-footer">
           <label class="sr-only" for="email">Email address</label>
@@ -362,10 +353,9 @@
           <li><a href="https://github.com/remry-ai/remry">GitHub</a></li>
           <li><a href="https://github.com/remry-ai/remry/releases">All releases</a></li>
           <li><a href="https://jweatherby.dev/contact">Contact</a></li>
-          <li><a href="https://buy.stripe.com/bJefZg54rbNLa0H1sb0Jq01">Buy Remry Pro</a></li>
         </ul>
       </nav>
-      <p class="license">Remry is under the <a href="https://github.com/remry-ai/remry/blob/main/LICENSE.md">Functional Source License 1.1, MIT Future License</a> (FSL-1.1-MIT). Each release becomes MIT two years after it’s published. © 2026 jweatherby.dev</p>
+      <p class="license">Licensed <a href="https://github.com/remry-ai/remry/blob/main/LICENSE.md">FSL-1.1-MIT</a>. © 2026 jweatherby.dev</p>
     </div>
   </footer>
 </body>
