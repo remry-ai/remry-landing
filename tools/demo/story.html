@@ -1,0 +1,182 @@
+<!doctype html>
+<!-- The landing page demo: each example shows the prompt, then the pieces of the app it changed
+     (crops.js) floating in. Drawn frame by frame: story.js calls render(t) and takes a screenshot,
+     so nothing animates between frames and no frame is half drawn. ?mode=phone for the phone cut. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body { font-family: Inter, system-ui, sans-serif; color: #111317; -webkit-font-smoothing: antialiased;
+    background: radial-gradient(120% 90% at 50% 0%, #ffffff 0%, #f3f4f6 55%, #e9ebef 100%); }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .prompt { position: absolute; left: 50%; top: 0; width: var(--pw); transform-origin: 50% 0;
+    background: #141414; color: #f4f4f5; border-radius: 18px; padding: 20px 26px 18px;
+    font-size: var(--pf); line-height: 1.35; letter-spacing: -0.01em; box-shadow: 0 18px 50px rgb(0 0 0 / 28%); }
+  .prompt .lbl { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #a1a1aa; margin-bottom: 6px; }
+  /* The whole prompt is laid out from the first frame; untyped text is transparent. */
+  .prompt .rest { color: transparent; }
+  .prompt .caret { position: relative; }
+  .prompt .caret::before { content: ''; position: absolute; left: 1px; top: 0.1em; bottom: 0; width: 2px; background: #a1a1aa; }
+  .prompt .done { margin-top: 10px; font-size: 15px; color: #e8865f; font-weight: 600; letter-spacing: .01em; }
+  .cards { position: absolute; left: 0; right: 0; transform-origin: 50% 0; display: flex; justify-content: center; align-items: flex-start; gap: 22px; }
+  .col { display: flex; flex-direction: column; gap: 18px; }
+  .card { position: relative; opacity: 0; }
+  .card .tag { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; margin: 0 0 6px 2px; }
+  .card .shot { position: relative; border-radius: 12px; overflow: hidden; background: #fff;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 14px 36px rgb(17 19 23 / 14%); outline: 1px solid rgb(17 19 23 / 8%); }
+  .card img { display: block; width: 100%; }
+  .ring { position: absolute; border: 3px solid #e8865f; border-radius: 9px; opacity: 0;
+    box-shadow: 0 0 0 4px rgb(232 134 95 / 18%); }
+  .end { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px; opacity: 0; text-align: center; padding: 0 24px; }
+  .end img { width: 96px; height: 96px; }
+  .end h1 { font-size: var(--ef); letter-spacing: -0.03em; line-height: 1.1; font-weight: 700; }
+  .end p { font-size: 20px; color: #555b65; }
+</style>
+</head>
+<body>
+<script>
+const PHONE = new URLSearchParams(location.search).get('mode') === 'phone';
+const W = PHONE ? 390 : 960, H = PHONE ? 660 : 640;
+document.documentElement.style.setProperty('--pw', PHONE ? '350px' : '660px');
+document.documentElement.style.setProperty('--pf', PHONE ? '22px' : '30px');
+document.documentElement.style.setProperty('--ef', PHONE ? '34px' : '48px');
+const C = '.out/crops/';
+const META = {};
+
+// Each example: the prompt, and the pieces it changed, as columns of [crop, width, tag].
+const SCENES = [
+  { prompt: 'Dana Park joined as a senior engineer, on Platform, reporting to Priya.',
+    d: [[['org-chart', 400, 'Org']], [['dana-groups', 360, 'Dana Park']]],
+    m: [['org-chart', 350, 'Org'], ['dana-groups', 350, 'Dana Park']] },
+  { prompt: 'Note that Dana wants to lead the migration. Remind me to book a 1:1 with her.',
+    d: [[['dana-todo', 400, 'Todos · Dana Park'], ['dana-note', 400, 'Notes · Dana Park']]],
+    m: [['dana-todo', 350, 'Todos · Dana Park'], ['dana-note', 350, 'Notes · Dana Park']] },
+  { prompt: 'The search rewrite is blocked on the new index. Note it, and remind me to chase Tom.',
+    d: [[['timeline', 560, 'Projects']], [['sr-head', 300, 'Search rewrite'], ['sr-panel', 330, '']]],
+    m: [['sr-head', 300, 'Search rewrite'], ['sr-panel', 350, '']] },
+  { prompt: 'Platform’s latency is at 310ms now. Read replicas took another 80ms off.',
+    d: [[['goal-head', 340, 'Goal'], ['goal-chart', 440, '']], [['goal-checkins', 400, 'Check-ins']]],
+    m: [['goal-head', 330, 'Goal'], ['goal-chart', 350, ''], ['goal-checkins', 350, 'Check-ins']] },
+  { prompt: 'Write up Platform’s quarter as a doc: delivery and reliability, with charts.',
+    d: [[['doc-delivery', 430, 'Doc · Q3 review']], [['doc-reliability', 430, '']]],
+    m: [['doc-delivery', 350, 'Doc · Q3 review'], ['doc-reliability', 350, '']] },
+];
+
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const easeIO = (x) => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const back = (x) => { x = clamp(x); const c = 1.4; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+
+const TYPE_CPS = 42, IN = 0.35, HOLD = 0.45, MOVE = 0.7, STAGGER = 0.28, CARD = 0.6, SHOW = 2.6, OUT = 0.4;
+const timeline = [];
+let total = 0;
+
+const build = () => {
+  for (const s of SCENES) {
+    const el = document.createElement('div'); el.className = 'scene';
+    const p = document.createElement('div'); p.className = 'prompt';
+    p.innerHTML = '<div class="lbl">You → Claude</div><div class="you"><span class="typed"></span><i class="caret"></i><span class="rest"></span></div><div class="done">✓ Filed in Remry</div>';
+    p.querySelector('.rest').textContent = s.prompt; // laid out in full before it's measured
+    el.appendChild(p);
+    const cards = document.createElement('div'); cards.className = 'cards';
+    const list = [];
+    const mk = ([name, w, tag]) => {
+      const c = document.createElement('div'); c.className = 'card'; c.style.width = w + 'px';
+      c.innerHTML = (tag ? `<div class="tag">${tag}</div>` : '') + `<div class="shot"><img src="${C}${name}.png"></div>`;
+      const m = META[name];
+      const ring = m.hl && document.createElement('div');
+      if (ring) {
+        const k = w / m.w; ring.className = 'ring';
+        Object.assign(ring.style, { left: (m.hl.x * k - 4) + 'px', top: (m.hl.y * k - 4) + 'px',
+          width: (m.hl.w * k + 8) + 'px', height: (m.hl.h * k + 8) + 'px' });
+        c.querySelector('.shot').style.overflow = 'visible'; c.querySelector('.shot').appendChild(ring);
+      }
+      list.push({ el: c, ring }); return c;
+    };
+    if (PHONE) { const col = document.createElement('div'); col.className = 'col'; col.style.alignItems = 'center'; s.m.forEach((c) => col.appendChild(mk(c))); cards.appendChild(col); }
+    else for (const colSpec of s.d) { const col = document.createElement('div'); col.className = 'col'; colSpec.forEach((c) => col.appendChild(mk(c))); cards.appendChild(col); }
+    el.appendChild(cards); document.body.appendChild(el);
+    const typeEnd = IN + s.prompt.length / TYPE_CPS, moveAt = typeEnd + HOLD;
+    const dur = moveAt + 0.5 + list.length * STAGGER + CARD + SHOW + OUT;
+    timeline.push({ s, el, p, cards, list, start: total, typeEnd, moveAt, dur });
+    total += dur;
+  }
+  const end = document.createElement('div'); end.className = 'end';
+  end.innerHTML = '<img src="../../public/icons/icon.svg" alt=""><h1>Your mind palace,<br>kept by Claude.</h1><p>remry.ai</p>';
+  document.body.appendChild(end);
+  timeline.push({ end, start: total, dur: 2.8 }); total += 2.8;
+};
+
+// Where the prompt sits: centred while typing, then shrunk to the top.
+const layout = (sc) => {
+  const h = sc.p.offsetHeight, w = sc.p.offsetWidth;
+  const scale = PHONE ? 0.74 : 0.62;
+  sc.centerY = (H - h) / 2; sc.topY = PHONE ? 14 : 18; sc.scale = scale;
+  const top = sc.topY + h * scale + (PHONE ? 18 : 24);
+  sc.cards.style.top = top + 'px';
+  // Enlarge the pieces to fill the room below the prompt.
+  const kids = [...sc.cards.children].map((e) => e.getBoundingClientRect());
+  const cw = Math.max(...kids.map((r) => r.right)) - Math.min(...kids.map((r) => r.left));
+  const ch = Math.max(...kids.map((r) => r.bottom)) - top;
+  const room = H - top - (PHONE ? 18 : 28);
+  sc.fit = Math.min(PHONE ? 1.12 : 1.45, (W - (PHONE ? 24 : 56)) / cw, room / ch);
+  sc.shift = Math.max(0, (room - ch * sc.fit) / 2.4); // a little above centre
+};
+
+window.render = (t) => {
+  for (const sc of timeline) {
+    const lt = t - sc.start;
+    const on = lt >= 0 && lt < sc.dur;
+    if (sc.end) {
+      sc.end.style.opacity = on ? Math.min(ease(lt / 0.5), 1 - clamp((lt - (sc.dur - 0.5)) / 0.5)) : 0;
+      sc.end.style.transform = `scale(${0.97 + 0.03 * ease(lt / 0.8)})`;
+      continue;
+    }
+    sc.el.style.display = on ? 'block' : 'none';
+    if (!on) continue;
+    // Fade the whole scene in and out.
+    const fin = ease(lt / IN), fout = clamp((lt - (sc.dur - OUT)) / OUT);
+    sc.el.style.opacity = Math.min(fin, 1 - easeIO(fout));
+    // Typing.
+    const n = Math.max(0, Math.min(sc.s.prompt.length, Math.floor((lt - IN) * TYPE_CPS)));
+    sc.p.querySelector('.typed').textContent = sc.s.prompt.slice(0, n);
+    sc.p.querySelector('.rest').textContent = sc.s.prompt.slice(n);
+    sc.p.querySelector('.caret').style.visibility = lt < sc.moveAt ? 'visible' : 'hidden';
+    sc.p.querySelector('.done').style.opacity = ease((lt - sc.moveAt) / 0.4);
+    // The prompt moves up and shrinks.
+    const m = easeIO((lt - sc.moveAt) / MOVE);
+    const y = sc.centerY + (sc.topY - sc.centerY) * m + (1 - fin) * 14;
+    const k = 1 + (sc.scale - 1) * m;
+    sc.p.style.transform = `translate(-50%, ${y}px) scale(${k})`;
+    // The changed pieces float in, one after another, and their highlight rings in.
+    sc.list.forEach((c, i) => {
+      const a = (lt - sc.moveAt - 0.5 - i * STAGGER) / CARD;
+      c.el.style.opacity = ease(a * 1.4);
+      c.el.style.transform = `translateY(${(1 - ease(a)) * 34}px) scale(${0.93 + 0.07 * back(a)})`;
+      if (c.ring) {
+        const r = (lt - sc.moveAt - 0.5 - i * STAGGER - CARD - 0.1) / 0.45;
+        c.ring.style.opacity = ease(r);
+        c.ring.style.transform = `scale(${1.12 - 0.12 * ease(r)})`;
+      }
+    });
+    // A slow drift while it holds, so it never sits dead still.
+    sc.cards.style.transform = `translateY(${sc.shift - 6 * clamp((lt - sc.moveAt) / (sc.dur - sc.moveAt))}px) scale(${sc.fit})`;
+  }
+};
+
+window.ready = (async () => {
+  Object.assign(META, window.__META); // story.js passes crops.json in
+  build();
+  await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
+  await document.fonts.ready;
+  for (const sc of timeline) if (!sc.end) { sc.el.style.display = 'block'; layout(sc); sc.el.style.display = 'none'; }
+  window.TOTAL = total;
+  render(0);
+  return total;
+})();
+</script>
+</body>
+</html>

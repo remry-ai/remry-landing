@@ -55,15 +55,14 @@ Buy Pro clicks carry `data-track` names.
 The screenshots and demos are recorded from the real app, not copied from Remry's README, so
 they follow the current layout. `tools/demo/build.sh` remakes all of them:
 
-1. It fills a throwaway notebook (`tools/demo/.data`) with a demo team, using `seed.py`.
-2. It records each scene of the demo with Playwright: a prompt typed into a "You → Claude"
-   bubble, the change made with the Remry CLI (what Claude does over MCP), then the result
-   (`record.js`). It grabs 2x frames itself, leaves out page loads, and runs in slow motion
-   (animations included) so the capture keeps up; `frames.py` plays it back at speed, at 30 fps,
-   with a short crossfade at each cut. This runs once at desktop size (960×640, shown at its real size,
-   with the left drawer collapsed and the right panel widened to 360px) and once at phone size (390×660),
-   so phones get a real phone recording rather than a crop.
-3. It takes the stills at both sizes (`shots.js`).
+1. It fills a throwaway notebook (`tools/demo/.data`) with a demo team (`seed.py`), then makes
+   each example's change with the Remry CLI, what Claude does over MCP (`finish.py`).
+2. It cuts the pieces of the app each example changed, at 3x (`crops.js`), and takes the stills
+   at both sizes (`shots.js`).
+3. It draws the demo from `story.html`: each example's prompt, then the pieces it changed
+   floating in. `story.js` renders it frame by frame at 30 fps (a screenshot after each
+   `render(t)`, so no frame is half drawn), once at desktop size (960×640) and once at phone
+   size (390×660, with narrower crops and fewer pieces).
 4. It writes everything the page uses into `public/images` (`images.py`).
 
 It needs a Remry clone beside this repo (or `REMRY_REPO`) with `bun install` and

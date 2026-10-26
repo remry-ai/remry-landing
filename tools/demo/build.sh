@@ -1,20 +1,21 @@
 #!/bin/sh
-# Records both demos and takes the stills, then writes everything the page uses into public/images.
+# Builds both demos and the stills, then writes everything the page uses into public/images.
 # Needs a Remry clone (REMRY_REPO, default ../remry beside this repo) with `bun install` and `bunx prisma generate` run,
 # Playwright, ffmpeg and Python 3 with Pillow.
+#
+# The demo is a storyboard (story.html): each example's prompt, then the pieces of the app it
+# changed, cut from the finished notebook (finish.py, crops.js) and drawn frame by frame (story.js).
 set -e
 D=$(cd "$(dirname "$0")" && pwd); OUT=$D/.out; I=$D/../../public/images
-"$D/fresh.sh" && mkdir -p "$OUT" && node "$D/record.js" desktop "$OUT"
-"$D/fresh.sh" && node "$D/record.js" phone "$OUT" && node "$D/shots.js" "$OUT"
-# Both are 2x frames with page loads left out, recorded in slow motion (record.js); frames.py
-# plays them back at speed with a crossfade at each cut.
-python3 -I "$D/frames.py" "$OUT/frames-desktop.json" "$OUT/frames-desktop.txt"
-ffmpeg -loglevel error -y -f concat -safe 0 -i "$OUT/frames-desktop.txt" -vf "fps=30,scale=1920:1280:flags=lanczos,format=yuv420p" -an -movflags +faststart -c:v libx264 -crf 24 -preset slow -tune stillimage "$I/demo.mp4"
-python3 -I "$D/frames.py" "$OUT/frames-phone.json" "$OUT/frames-phone.txt"
-ffmpeg -loglevel error -y -f concat -safe 0 -i "$OUT/frames-phone.txt" -vf "fps=30,format=yuv420p" -an -movflags +faststart -c:v libx264 -crf 25 -preset slow -tune stillimage "$I/demo-m.mp4"
-ffmpeg -loglevel error -y -i "$I/demo.mp4" -vf "fps=8,scale=800:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=64[p];[b][p]paletteuse=dither=none" "$I/demo.gif"
-ffmpeg -loglevel error -y -ss 0.8 -i "$I/demo.mp4" -frames:v 1 "$OUT/poster.png"
-ffmpeg -loglevel error -y -ss 0.8 -i "$I/demo-m.mp4" -frames:v 1 "$OUT/poster-m.png"
+"$D/fresh.sh" && python3 "$D/finish.py" && mkdir -p "$OUT"
+rm -rf "$OUT/crops" && node "$D/crops.js" "$OUT" && node "$D/shots.js" "$OUT"
+node "$D/story.js" desktop "$OUT" && node "$D/story.js" phone "$OUT"
+ffmpeg -loglevel error -y -framerate 30 -i "$OUT/story-desktop/%05d.jpg" -vf "format=yuv420p" -an -movflags +faststart -c:v libx264 -crf 22 -preset slow "$I/demo.mp4"
+ffmpeg -loglevel error -y -framerate 30 -i "$OUT/story-phone/%05d.jpg" -vf "format=yuv420p" -an -movflags +faststart -c:v libx264 -crf 22 -preset slow "$I/demo-m.mp4"
+ffmpeg -loglevel error -y -i "$I/demo.mp4" -vf "fps=10,scale=800:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=none" "$I/demo.gif"
+# The poster is the first example with its pieces in place.
+ffmpeg -loglevel error -y -i "$OUT/story-desktop/00165.jpg" "$OUT/poster.png"
+ffmpeg -loglevel error -y -i "$OUT/story-phone/00165.jpg" "$OUT/poster-m.png"
 python3 -I "$D/images.py" "$OUT" "$I"
 fuser -k 5173/tcp >/dev/null 2>&1 || true
 echo "Done. Check the images, then commit public/images."
