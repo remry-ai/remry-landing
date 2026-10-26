@@ -36,8 +36,8 @@ const overlay = () => {
       background: #141414; color: #f4f4f5; border-radius: 14px; padding: 14px 20px; z-index: 2147483000;
       font: 20px/1.4 Inter, system-ui, sans-serif; box-shadow: 0 12px 40px rgb(0 0 0 / 35%); display: none; }
     #ov .lbl { font-size: 13px; letter-spacing: .06em; color: #a1a1aa; text-transform: uppercase; margin-bottom: 3px; }
-    #ov .you::after { content: '▍'; color: #a1a1aa; animation: b 1s steps(1) infinite; }
-    #ov.done .you::after { content: ''; }
+    #ov .you::after { content: ''; display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -0.15em; background: #71717a; }
+    #ov.done .you::after { display: none; }
     #ov .cl { display: none; border-top: 1px solid #2a2a2e; margin-top: 9px; padding-top: 8px; color: #d4d4d8; font-size: 18px; }
     #ov .cl b { color: #e8865f; margin-right: 6px; }
     #cap { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: #141414; color: #fafafa;
@@ -96,6 +96,9 @@ const overlay = () => {
         const r = await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 82,
           clip: { x: v.pageX, y: v.pageY, width: viewport.width, height: viewport.height, scale: 2 } });
         if (paused) continue;
+        // A frame taken while the page scrolled is clipped from the wrong place: drop it.
+        const after = (await cdp.send('Page.getLayoutMetrics')).cssVisualViewport;
+        if (after.pageX !== v.pageX || after.pageY !== v.pageY) continue;
         const f = path.join(FRAMES, `${String(shots.length).padStart(5, '0')}.jpg`);
         fs.writeFileSync(f, Buffer.from(r.data, 'base64')); shots.push({ f, t: Date.now() - skipped, cut }); cut = false;
       } catch { await new Promise((res) => setTimeout(res, 30)); }
@@ -107,9 +110,11 @@ const overlay = () => {
   // Waiting on the CLI after the prompt is typed isn't shown either.
   pauseFor = async (p) => { pause(); try { return await p; } finally { resume(); } };
   const wait = (ms) => page.waitForTimeout(ms * SLOW);
-  const go = async (p) => {
+  // `then` runs before the capture resumes, so its setup (opening a drawer) happens off screen.
+  const go = async (p, then) => {
     pause(); await page.goto(BASE + p, { waitUntil: 'networkidle' });
     if (capCdp) await capCdp.send('Animation.setPlaybackRate', { playbackRate: 1 / SLOW }).catch(() => {});
+    if (then) await then();
     await wait(500); resume();
   };
   const type = async (text) => {
@@ -149,22 +154,22 @@ const overlay = () => {
   await highlight(`.node[data-person-id="${dana.id}"]`); await wait(3000);
 
   // 2. After a 1:1: the note and the todo land in the right panel.
-  await go(`/app/people/${dana.id}`); await openRightPanel();
+  await go(`/app/people/${dana.id}`, openRightPanel);
   prompt = 'Note that Dana wants to lead the migration. Remind me to book a 1:1 with her.';
   await during(type(prompt), () => Promise.all([
     remry('note.add', { entityType: 'PERSON', entityId: dana.id, content: 'Wants to lead the Q4 migration. Said the on-call rotation is the part she’d change first.' }),
     remry('todo.create', { title: 'Book 1:1 with Dana', priority: 2, entityType: 'PERSON', entityId: dana.id, targetDate: days(7) })]));
-  await go(`/app/people/${dana.id}`); await openRightPanel();
+  await go(`/app/people/${dana.id}`, openRightPanel);
   await reply(prompt, 'Added a note on Dana Park, and a todo: “Book 1:1 with Dana”', 4000);
 
   // 3. A blocked project, then the timeline and a peek.
-  await go(`/app/projects/${ids['Search rewrite']}`); await openRightPanel();
+  await go(`/app/projects/${ids['Search rewrite']}`, openRightPanel);
   prompt = 'The search rewrite is blocked on the new index. Note it, and remind me to chase Tom.';
   await during(type(prompt), () => Promise.all([
     remry('project.update', { id: ids['Search rewrite'], status: 'blocked' }),
     remry('note.add', { entityType: 'PROJECT', entityId: ids['Search rewrite'], content: 'Blocked until the new search index ships.' }),
     remry('todo.create', { title: 'Chase Tom on the search index', priority: 1, entityType: 'PROJECT', entityId: ids['Search rewrite'] })]));
-  await go(`/app/projects/${ids['Search rewrite']}`); await openRightPanel();
+  await go(`/app/projects/${ids['Search rewrite']}`, openRightPanel);
   await reply(prompt, 'Search rewrite is now blocked · added a note and a todo', 2600);
   await go('/app/projects');
   // The timeline needs the width: close the panel here, and the peek opens it again.
