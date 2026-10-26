@@ -68,3 +68,7 @@ they follow the current layout. `tools/demo/build.sh` remakes all of them:
 It needs a Remry clone beside this repo (or `REMRY_REPO`) with `bun install` and
 `bunx prisma generate` run, plus Playwright, ffmpeg and Python 3 with Pillow. Run it after a
 UI change, check the images, and commit `public/images`.
+
+Images are cached for a week, so every local link carries a hash of its file
+(`/images/demo.mp4?v=8655170d`). `build.sh` updates them; after changing any other file in
+`public/` by hand, run `python3 tools/version.py`. A link only changes when its file does.

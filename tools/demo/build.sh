@@ -17,5 +17,6 @@ ffmpeg -loglevel error -y -i "$I/demo.mp4" -vf "fps=10,scale=800:-1:flags=lanczo
 ffmpeg -loglevel error -y -i "$OUT/story-desktop/00165.jpg" "$OUT/poster.png"
 ffmpeg -loglevel error -y -i "$OUT/story-phone/00165.jpg" "$OUT/poster-m.png"
 python3 -I "$D/images.py" "$OUT" "$I"
+python3 -I "$D/../version.py"
 fuser -k 5173/tcp >/dev/null 2>&1 || true
 echo "Done. Check the images, then commit public/images."

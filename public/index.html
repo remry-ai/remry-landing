@@ -28,14 +28,14 @@
   <meta name="twitter:image:alt" content="Remry: your mind palace, kept by Claude.">
 
   <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/icons/icon-small.svg" type="image/svg+xml">
+  <link rel="icon" href="/icons/icon-small.svg?v=dd78de96" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="preload" href="/images/demo-poster.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="preload" href="/images/demo-poster.webp?v=455dd9f2" as="image" type="image/webp">
+  <link rel="stylesheet" href="/styles.css?v=2ac31d8c">
 
-  <script src="/main.js" defer></script>
+  <script src="/main.js?v=d32337ea" defer></script>
   <!-- Analytics: see /analytics.js. It's a no-op until a provider is switched on there. -->
-  <script src="/analytics.js" defer></script>
+  <script src="/analytics.js?v=f052e3ce" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -43,7 +43,7 @@
   <header class="topbar">
     <div class="wrap topbar-inner">
       <a class="brand" href="/" aria-label="Remry home">
-        <img src="/icons/icon-small.svg" alt="" width="28" height="28">
+        <img src="/icons/icon-small.svg?v=dd78de96" alt="" width="28" height="28">
         <span>remry</span>
       </a>
       <nav aria-label="Sections">
@@ -85,8 +85,8 @@
         </div>
         <div class="hero-art" aria-hidden="true">
           <picture>
-            <source srcset="/images/palace.webp" type="image/webp">
-            <img src="/images/palace.png" alt="" width="638" height="580">
+            <source srcset="/images/palace.webp?v=b7ad4785" type="image/webp">
+            <img src="/images/palace.png?v=326f232e" alt="" width="638" height="580">
           </picture>
         </div>
       </div>
@@ -96,11 +96,11 @@
           <div class="window">
             <div class="window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
             <video id="demo-video" autoplay muted loop playsinline preload="metadata"
-                   width="1920" height="1280" poster="/images/demo-poster.webp"
+                   width="1920" height="1280" poster="/images/demo-poster.webp?v=455dd9f2"
                    aria-label="Five prompts to Claude and what each changes in Remry: a new hire in the org chart, a todo and a note from a 1:1, a blocked project, a goal check-in, and a doc with charts.">
-              <source src="/images/demo-m.mp4" type="video/mp4" media="(max-width: 640px)">
-              <source src="/images/demo.mp4" type="video/mp4">
-              <img src="/images/demo.gif" width="800" height="533" alt="Five prompts to Claude and what each changes in Remry: a new hire in the org chart, a todo and a note from a 1:1, a blocked project, a goal check-in, and a doc with charts.">
+              <source src="/images/demo-m.mp4?v=4982a4de" type="video/mp4" media="(max-width: 640px)">
+              <source src="/images/demo.mp4?v=8655170d" type="video/mp4">
+              <img src="/images/demo.gif?v=7f152c68" width="800" height="533" alt="Five prompts to Claude and what each changes in Remry: a new hire in the org chart, a todo and a note from a 1:1, a blocked project, a goal check-in, and a doc with charts.">
             </video>
             <div class="demo-controls">
               <button class="demo-toggle" id="demo-toggle" type="button" aria-pressed="false" hidden>Pause</button>
@@ -152,11 +152,11 @@
             <h3>An org change</h3>
             <blockquote><span class="you">You:</span> Dana Park joined as a senior engineer, on Platform, reporting to Priya.</blockquote>
             <p>Claude adds Dana, sets her lead and team. For a reorg, edit the org chart by hand.</p>
-            <a class="zoom" href="/images/org-map-1600.png"><span class="sr-only">Open full size: </span>
+            <a class="zoom" href="/images/org-map-1600.png?v=b6597b11"><span class="sr-only">Open full size: </span>
             <picture>
-              <source media="(max-width: 640px)" type="image/webp" srcset="/images/org-map-m.webp" width="780" height="1240">
-              <source type="image/webp" srcset="/images/org-map-800.webp 800w, /images/org-map-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
-              <img src="/images/org-map-1600.png" width="1600" height="1000" loading="lazy" decoding="async"
+              <source media="(max-width: 640px)" type="image/webp" srcset="/images/org-map-m.webp?v=cadedff6" width="780" height="1240">
+              <source type="image/webp" srcset="/images/org-map-800.webp?v=ae5cc7b5 800w, /images/org-map-1600.webp?v=be919729 1600w" sizes="(min-width: 960px) 560px, 92vw">
+              <img src="/images/org-map-1600.png?v=b6597b11" width="1600" height="1000" loading="lazy" decoding="async"
                    alt="The org chart: Alice Johnson’s reports, with Dana Park and Tom Reid under Priya Shah.">
             </picture></a>
           </article>
@@ -165,11 +165,11 @@
             <h3>After a 1:1</h3>
             <blockquote><span class="you">You:</span> Note that Dana wants to lead the migration. She’d change the on-call rotation first. Remind me to book a 1:1.</blockquote>
             <p>Both land in the panel beside Dana’s page: the note dated, in your words, and the todo above it. Months later, “what do I know about Dana?” returns her notes, todos and docs.</p>
-            <a class="zoom" href="/images/person-1600.png"><span class="sr-only">Open full size: </span>
+            <a class="zoom" href="/images/person-1600.png?v=7782d516"><span class="sr-only">Open full size: </span>
             <picture>
-              <source media="(max-width: 640px)" type="image/webp" srcset="/images/person-m.webp" width="780" height="1120">
-              <source type="image/webp" srcset="/images/person-800.webp 800w, /images/person-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
-              <img src="/images/person-1600.png" width="1600" height="1000" loading="lazy" decoding="async"
+              <source media="(max-width: 640px)" type="image/webp" srcset="/images/person-m.webp?v=b43a548c" width="780" height="1120">
+              <source type="image/webp" srcset="/images/person-800.webp?v=7baeb9b1 800w, /images/person-1600.webp?v=d0f4b82a 1600w" sizes="(min-width: 960px) 560px, 92vw">
+              <img src="/images/person-1600.png?v=7782d516" width="1600" height="1000" loading="lazy" decoding="async"
                    alt="Dana’s page: her title, lead and groups, with the todo “Book 1:1 with Dana” and a dated note in the right panel.">
             </picture></a>
           </article>
@@ -178,11 +178,11 @@
             <h3>Goals with real numbers</h3>
             <blockquote><span class="you">You:</span> Platform’s H2 goal is p95 latency under 200ms, from 480. We’re at 310 now.</blockquote>
             <p>Each check-in adds to the history instead of overwriting it, and a goal that trails its pace is flagged “Behind pace”.</p>
-            <a class="zoom" href="/images/goal-1600.png"><span class="sr-only">Open full size: </span>
+            <a class="zoom" href="/images/goal-1600.png?v=2390ae5a"><span class="sr-only">Open full size: </span>
             <picture>
-              <source media="(max-width: 640px)" type="image/webp" srcset="/images/goal-m.webp" width="780" height="1560">
-              <source type="image/webp" srcset="/images/goal-800.webp 800w, /images/goal-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
-              <img src="/images/goal-1600.png" width="1600" height="1000" loading="lazy" decoding="async"
+              <source media="(max-width: 640px)" type="image/webp" srcset="/images/goal-m.webp?v=794b6fcd" width="780" height="1560">
+              <source type="image/webp" srcset="/images/goal-800.webp?v=4d1786bc 800w, /images/goal-1600.webp?v=e84f5842 1600w" sizes="(min-width: 960px) 560px, 92vw">
+              <img src="/images/goal-1600.png?v=2390ae5a" width="1600" height="1000" loading="lazy" decoding="async"
                    alt="The goal page: a progress bar, a line chart of check-ins against the target, and the check-in history.">
             </picture></a>
           </article>
@@ -191,11 +191,11 @@
             <h3>Writing up the quarter</h3>
             <blockquote><span class="you">You:</span> Write up Platform’s quarter as a doc: delivery and reliability, with charts.</blockquote>
             <p>Claude builds it from what’s already in the notebook, charts included. Export to PDF with Pro.</p>
-            <a class="zoom" href="/images/doc-charts-1600.png"><span class="sr-only">Open full size: </span>
+            <a class="zoom" href="/images/doc-charts-1600.png?v=b129a771"><span class="sr-only">Open full size: </span>
             <picture>
-              <source media="(max-width: 640px)" type="image/webp" srcset="/images/doc-charts-m.webp" width="780" height="1400">
-              <source type="image/webp" srcset="/images/doc-charts-800.webp 800w, /images/doc-charts-1600.webp 1600w" sizes="(min-width: 960px) 560px, 92vw">
-              <img src="/images/doc-charts-1600.png" width="1600" height="1000" loading="lazy" decoding="async"
+              <source media="(max-width: 640px)" type="image/webp" srcset="/images/doc-charts-m.webp?v=a658fd2c" width="780" height="1400">
+              <source type="image/webp" srcset="/images/doc-charts-800.webp?v=a1541d6e 800w, /images/doc-charts-1600.webp?v=511b8af0 1600w" sizes="(min-width: 960px) 560px, 92vw">
+              <img src="/images/doc-charts-1600.png?v=b129a771" width="1600" height="1000" loading="lazy" decoding="async"
                    alt="A doc on the Platform team: prose and a bar chart of committed against delivered story points.">
             </picture></a>
           </article>
@@ -209,11 +209,11 @@
         <h2 id="app-title">The app comes set up</h2>
         <p class="section-lede">In Notion or Obsidian you start on a blank page and build the templates, databases and plugins yourself. Remry has people, teams, projects, goals and docs built in, already linked.</p>
         <figure class="app-shot">
-          <a class="zoom" href="/images/home-1600.png"><span class="sr-only">Open full size: </span>
+          <a class="zoom" href="/images/home-1600.png?v=e1ef86d4"><span class="sr-only">Open full size: </span>
           <picture>
-            <source media="(max-width: 640px)" type="image/webp" srcset="/images/home-m.webp" width="780" height="1400">
-            <source type="image/webp" srcset="/images/home-800.webp 800w, /images/home-1600.webp 1600w" sizes="(min-width: 1160px) 1112px, 92vw">
-            <img src="/images/home-1600.png" width="1600" height="1000" loading="lazy" decoding="async"
+            <source media="(max-width: 640px)" type="image/webp" srcset="/images/home-m.webp?v=0c5010d6" width="780" height="1400">
+            <source type="image/webp" srcset="/images/home-800.webp?v=55533af1 800w, /images/home-1600.webp?v=690189c8 1600w" sizes="(min-width: 1160px) 1112px, 92vw">
+            <img src="/images/home-1600.png?v=e1ef86d4" width="1600" height="1000" loading="lazy" decoding="async"
                  alt="The home dashboard: open todos and a feed of the latest updates.">
           </picture></a>
         </figure>

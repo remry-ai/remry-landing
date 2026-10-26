@@ -44,7 +44,7 @@
   if (video && toggle) {
     toggle.hidden = false;
     // Phones get the demo recorded at phone width (its <source> has a media query); match its poster.
-    if (window.matchMedia('(max-width: 640px)').matches) video.poster = '/images/demo-poster-m.webp';
+    if (window.matchMedia('(max-width: 640px)').matches) video.poster = '/images/demo-poster-m.webp?v=bf533a83';
     const sync = () => {
       const paused = video.paused;
       toggle.textContent = paused ? 'Play' : 'Pause';
