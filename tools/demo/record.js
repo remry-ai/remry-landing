@@ -36,8 +36,13 @@ const overlay = () => {
       background: #141414; color: #f4f4f5; border-radius: 14px; padding: 14px 20px; z-index: 2147483000;
       font: 20px/1.4 Inter, system-ui, sans-serif; box-shadow: 0 12px 40px rgb(0 0 0 / 35%); display: none; }
     #ov .lbl { font-size: 13px; letter-spacing: .06em; color: #a1a1aa; text-transform: uppercase; margin-bottom: 3px; }
-    #ov .you::after { content: ''; display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -0.15em; background: #71717a; }
-    #ov.done .you::after { display: none; }
+    /* The whole prompt is laid out from the start (untyped text transparent) and the caret takes no
+       width, so words never jump to the next line and the bubble never changes size as it types. */
+    #ov .rest { color: transparent; }
+    /* A plain empty inline, not inline-block: an inline-block lets a line break mid-word beside it. */
+    #ov .caret { position: relative; }
+    #ov .caret::before { content: ''; position: absolute; left: 1px; top: 0; bottom: 0; width: 2px; background: #71717a; }
+    #ov.done .caret { visibility: hidden; }
     #ov .cl { display: none; border-top: 1px solid #2a2a2e; margin-top: 9px; padding-top: 8px; color: #d4d4d8; font-size: 18px; }
     #ov .cl b { color: #e8865f; margin-right: 6px; }
     #cap { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: #141414; color: #fafafa;
@@ -55,11 +60,18 @@ const overlay = () => {
     document.body.append(ov, cap);
   };
   window.__ov = {
-    show(text = '', done = false) { mount(); const ov = document.getElementById('ov'); ov.style.display = 'block';
-      ov.classList.toggle('done', done); ov.querySelector('.you').textContent = text; ov.querySelector('.cl').style.display = 'none'; },
-    set(text) { document.querySelector('#ov .you').textContent = text; },
-    claude(text) { const ov = document.getElementById('ov'); ov.classList.add('done');
-      const cl = ov.querySelector('.cl'); cl.style.display = 'block'; cl.querySelector('span').textContent = text; },
+    // The prompt with `typed` characters showing, and room kept for Claude's reply line.
+    render(prompt, typed, reply, replied) { mount(); const ov = document.getElementById('ov'); ov.style.display = 'block';
+      ov.classList.toggle('done', replied);
+      const you = ov.querySelector('.you'); you.textContent = '';
+      const a = document.createElement('span'); a.className = 'typed';
+      const c = document.createElement('i'); c.className = 'caret';
+      const b = document.createElement('span'); b.className = 'rest';
+      you.append(a, c, b); window.__ov.prompt = prompt; window.__ov.set(typed);
+      const cl = ov.querySelector('.cl'); cl.style.display = reply ? 'block' : 'none';
+      cl.style.visibility = replied ? 'visible' : 'hidden'; cl.querySelector('span').textContent = reply || ''; },
+    set(n) { const p = window.__ov.prompt || ''; document.querySelector('#ov .typed').textContent = p.slice(0, n);
+      document.querySelector('#ov .rest').textContent = p.slice(n); },
     hide() { const ov = document.getElementById('ov'); if (ov) ov.style.display = 'none'; },
     caption(text) { mount(); const c = document.getElementById('cap'); c.textContent = text; c.style.display = text ? 'block' : 'none'; },
     highlight(sel) { document.querySelectorAll('.ov-hl').forEach((e) => e.classList.remove('ov-hl'));
@@ -117,14 +129,14 @@ const overlay = () => {
     if (then) await then();
     await wait(500); resume();
   };
-  const type = async (text) => {
-    await page.evaluate(() => window.__ov.show(''));
-    for (let i = 1; i <= text.length; i++) { await page.evaluate((t) => window.__ov.set(t), text.slice(0, i)); await wait(32); }
+  const type = async (text, said) => {
+    await page.evaluate(([p, r]) => window.__ov.render(p, 0, r, false), [text, said]);
+    for (let i = 1; i <= text.length; i++) { await page.evaluate((n) => window.__ov.set(n), i); await wait(32); }
     await wait(700);
   };
-  // After a reload the bubble comes back with the prompt and Claude's reply.
+  // After a reload the bubble comes back with the prompt and Claude's reply, at the same size.
   const reply = async (prompt, text, hold = 3400) => {
-    await page.evaluate(([p, t]) => { window.__ov.show(p, true); window.__ov.claude(t); }, [prompt, text]);
+    await page.evaluate(([p, r]) => window.__ov.render(p, p.length, r, true), [prompt, text]);
     await wait(hold);
   };
   const caption = (t) => page.evaluate((x) => window.__ov.caption(x), t);
@@ -139,7 +151,7 @@ const overlay = () => {
   // 1. An org change.
   await go('/app/orgmap'); await wait(1200); startCapture(); await wait(400);
   let prompt = 'Dana Park joined as a senior engineer, on Platform, reporting to Priya.';
-  const dana = await during(type(prompt), async () => {
+  const dana = await during(type(prompt, 'Added Dana Park · reports to Priya Shah · on Platform'), async () => {
     const d = await remry('person.create', { name: 'Dana Park', extensions: { org: { title: 'Senior Engineer' } } });
     await remry('personRelation.add', { fromId: ids['Priya Shah'], toId: d.id, kind: 'LEAD_OF' });
     await Promise.all([remry('group.addMember', { groupId: ids.Platform, personId: d.id }),
@@ -156,7 +168,7 @@ const overlay = () => {
   // 2. After a 1:1: the note and the todo land in the right panel.
   await go(`/app/people/${dana.id}`, openRightPanel);
   prompt = 'Note that Dana wants to lead the migration. Remind me to book a 1:1 with her.';
-  await during(type(prompt), () => Promise.all([
+  await during(type(prompt, 'Added a note on Dana Park, and a todo: “Book 1:1 with Dana”'), () => Promise.all([
     remry('note.add', { entityType: 'PERSON', entityId: dana.id, content: 'Wants to lead the Q4 migration. Said the on-call rotation is the part she’d change first.' }),
     remry('todo.create', { title: 'Book 1:1 with Dana', priority: 2, entityType: 'PERSON', entityId: dana.id, targetDate: days(7) })]));
   await go(`/app/people/${dana.id}`, openRightPanel);
@@ -165,7 +177,7 @@ const overlay = () => {
   // 3. A blocked project, then the timeline and a peek.
   await go(`/app/projects/${ids['Search rewrite']}`, openRightPanel);
   prompt = 'The search rewrite is blocked on the new index. Note it, and remind me to chase Tom.';
-  await during(type(prompt), () => Promise.all([
+  await during(type(prompt, 'Search rewrite is now blocked · added a note and a todo'), () => Promise.all([
     remry('project.update', { id: ids['Search rewrite'], status: 'blocked' }),
     remry('note.add', { entityType: 'PROJECT', entityId: ids['Search rewrite'], content: 'Blocked until the new search index ships.' }),
     remry('todo.create', { title: 'Chase Tom on the search index', priority: 1, entityType: 'PROJECT', entityId: ids['Search rewrite'] })]));
@@ -181,7 +193,7 @@ const overlay = () => {
   // 4. A goal check-in.
   await go(`/app/goals/${ids['Cut p95 latency to 200ms']}`);
   prompt = 'Platform’s latency is at 310ms now. Read replicas took another 80ms off.';
-  await during(type(prompt), () => remry('goal.checkIn', { goalId: ids['Cut p95 latency to 200ms'], date: '2026-09-10T00:00:00.000Z', value: 310, status: 'ON_TRACK', comment: 'Read replicas took another 80ms off.' }));
+  await during(type(prompt, 'Checked in 310 ms on “Cut p95 latency to 200ms” · on track'), () => remry('goal.checkIn', { goalId: ids['Cut p95 latency to 200ms'], date: '2026-09-10T00:00:00.000Z', value: 310, status: 'ON_TRACK', comment: 'Read replicas took another 80ms off.' }));
   await go(`/app/goals/${ids['Cut p95 latency to 200ms']}`);
   await reply(prompt, 'Checked in 310 ms on “Cut p95 latency to 200ms” · on track', 900);
   await page.evaluate(() => { const c = document.querySelector('canvas'); if (c) c.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
@@ -190,7 +202,7 @@ const overlay = () => {
   // 5. A wiki page that links up.
   await go('/app/wiki');
   prompt = 'We pay Datadog $40k a year for 40 seats; it renews in March. Platform uses it for alerting.';
-  const dd = await during(type(prompt), async () => {
+  const dd = await during(type(prompt, 'Added a page for Datadog, linked to Platform'), async () => {
     const pg = await remry('page.create', { title: 'Datadog', content: '- **Vendor:** Datadog\n- **Cost:** $40,000 a year, 40 seats\n- **Renews:** March 2027\n\nMonitoring and alerting. Platform owns the account.' });
     await remry('relation.add', { fromType: 'GROUP', fromId: ids.Platform, toType: 'PAGE', toId: pg.id, note: 'Uses it for alerting' });
     return pg;
@@ -202,7 +214,7 @@ const overlay = () => {
   // 6. Writing up the quarter.
   await go(`/app/groups/${ids.Platform}`);
   prompt = 'Write up Platform’s quarter as a doc: delivery and reliability, with charts.';
-  const doc = await during(type(prompt), async () => {
+  const doc = await during(type(prompt, 'Wrote “Q3 review” on Platform, with two charts'), async () => {
     const d = await remry('doc.add', { entityType: 'GROUP', entityId: ids.Platform, title: 'Q3 review' });
     await remry('doc.update', { id: d.id, content: fs.readFileSync(path.join(__dirname, 'q3.md'), 'utf8')
       .replace('{{migration}}', `/app/projects/${ids['Q4 migration']}`).replace('{{datadog}}', `/app/wiki/${dd.id}`) });

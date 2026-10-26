@@ -10,6 +10,22 @@ slow, shots = data["slow"], data["shots"]
 blend_dir = os.path.join(os.path.dirname(src), os.path.basename(src).replace(".json", "-fades"))
 os.makedirs(blend_dir, exist_ok=True)
 
+# Drop torn frames: the browser sometimes returns a frame that's only partly redrawn (half the
+# old screen, half the new), which shows as a flash. Such a frame differs sharply from both
+# neighbours while they match each other; its time goes to the frame before it.
+from PIL import ImageChops, ImageStat
+def small(f): return Image.open(f).convert("L").resize((96, 96))
+def diff(a, b): return ImageStat.Stat(ImageChops.difference(a, b)).mean[0]
+thumbs = [small(s["f"]) for s in shots]
+torn = set()
+for i in range(1, len(shots) - 1):
+    if shots[i].get("cut") or shots[i + 1].get("cut"):
+        continue
+    d_prev, d_next, d_skip = diff(thumbs[i - 1], thumbs[i]), diff(thumbs[i], thumbs[i + 1]), diff(thumbs[i - 1], thumbs[i + 1])
+    if min(d_prev, d_next) > 2 * d_skip + 1.5:
+        torn.add(i)
+shots = [s for i, s in enumerate(shots) if i not in torn]
+
 entries = []  # (file, seconds)
 for i, s in enumerate(shots):
     if s.get("cut") and i > 0:
@@ -27,4 +43,4 @@ with open(out_list, "w") as fh:
     for f, d in entries:
         fh.write(f"file '{f}'\nduration {d:.4f}\n")
     fh.write(f"file '{entries[-1][0]}'\n")
-print(f"{len(shots)} frames, {sum(1 for s in shots if s.get('cut'))} crossfades, {sum(d for _, d in entries):.1f}s")
+print(f"{len(torn)} torn frames dropped, {len(shots)} frames, {sum(1 for s in shots if s.get('cut'))} crossfades, {sum(d for _, d in entries):.1f}s")
