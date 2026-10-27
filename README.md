@@ -46,9 +46,10 @@ remry-landing → Custom domains → `remry.ai` (and `www.remry.ai`, redirecting
 
 ## Analytics
 
-Off by default. `public/analytics.js` explains how to switch on Cloudflare Web Analytics or
-Plausible, and which hosts to add to the CSP in `public/_headers`. Download, newsletter and
-Buy Pro clicks carry `data-track` names.
+Plausible (no cookies, no personal data). `index.html` loads `public/analytics.js`, which sets up
+Plausible's queue, then Plausible's script; `public/_headers` allows https://plausible.io in
+`script-src` and `connect-src`. Download, newsletter and Buy Pro clicks are sent as custom events
+named by their `data-track` attributes; add those names as goals in Plausible to see them.
 
 ## Images
 

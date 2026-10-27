@@ -64,7 +64,7 @@
   // Analytics events: anything with data-track. `remryTrack` is defined in analytics.js.
   document.addEventListener('click', (e) => {
     const el = e.target instanceof Element && e.target.closest('a[data-track]');
-    if (el && window.remryTrack) window.remryTrack(el.dataset.track, { platform: el.dataset.platform || '' });
+    if (el && window.remryTrack) window.remryTrack(el.dataset.track, el.dataset.platform ? { platform: el.dataset.platform } : {});
   });
   document.addEventListener('submit', (e) => {
     const form = e.target;

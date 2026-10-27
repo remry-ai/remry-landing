@@ -1,6 +1,6 @@
 # Cloudflare Pages headers. https://developers.cloudflare.com/pages/configuration/headers/
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; font-src 'self'; form-action 'self' https:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://plausible.io; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self' https://plausible.io; font-src 'self'; form-action 'self' https:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
