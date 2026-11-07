@@ -191,7 +191,7 @@
           <article class="case">
             <h3>Writing up the quarter</h3>
             <blockquote><span class="you">You:</span> Write up Platform’s quarter as a doc: delivery and reliability, with charts.</blockquote>
-            <p>Claude builds it from what’s already in the notebook, charts included. Export to PDF with Pro.</p>
+            <p>Claude builds it from what’s already in the notebook, charts included. Export it to PDF, branded with Pro.</p>
             <a class="zoom" href="/images/doc-charts-1600.png?v=b129a771"><span class="sr-only">Open full size: </span>
             <picture>
               <source media="(max-width: 640px)" type="image/webp" srcset="/images/doc-charts-m.webp?v=a658fd2c" width="780" height="1400">
@@ -237,11 +237,19 @@
           </li>
           <li>
             <h3>Find anything</h3>
-            <p>Press ⌘K and type a name.</p>
+            <p>Press ⌘K and type a name, or <code>/search</code> to search every word.</p>
           </li>
           <li>
-            <h3>Ask about this page</h3>
-            <p>The side panel’s Chat tab asks Claude about the page you’re on.</p>
+            <h3>Spreadsheets</h3>
+            <p>For many records of one shape, with formulas and currency formats. Any doc or wiki page can be one.</p>
+          </li>
+          <li>
+            <h3>Excalidraw drawings</h3>
+            <p>Ask Claude for a diagram and it lays out the shapes and arrows. Open it to edit full screen.</p>
+          </li>
+          <li>
+            <h3>Briefs that stay current</h3>
+            <p>One write-up from the PRD, the Linear project and the pricing sheet, with where they disagree. Each source shows when it was last synced.</p>
           </li>
         </ul>
       </div>
@@ -286,8 +294,8 @@
             <p>Nothing to sign up for or log in to.</p>
           </li>
           <li>
-            <h3>The app never calls a model</h3>
-            <p>Claude works on it from outside. The app’s only request is checking GitHub for updates.</p>
+            <h3>No model of its own</h3>
+            <p>Claude works on it from outside, and the AI features in the app run your own Claude Code. Besides update checks, nothing leaves unless you share a drawing.</p>
           </li>
           <li>
             <h3>Offline license key</h3>
@@ -314,7 +322,9 @@
               <li>Projects with owners, status and a timeline</li>
               <li>Goals with check-ins and charts</li>
               <li>Notes, todos, wiki pages and docs with charts</li>
-              <li>Find anything by name with ⌘K</li>
+              <li>Spreadsheets, and 3 Excalidraw drawings per notebook</li>
+              <li>Full-text search, and “what do I know about X” from Claude</li>
+              <li>PDF export of docs and wiki pages</li>
               <li>Hourly local backups</li>
             </ul>
             <a class="btn btn-ghost" href="#get-started" data-track="download-pricing">Download</a>
@@ -328,9 +338,11 @@
             </p>
             <p class="price-note">Founding price, locked in while you renew. Goes to $60 USD / $80 CAD later.</p>
             <ul class="checks">
-              <li><strong>Full-text search</strong> across notes, docs, pages and todos, and “what do I know about X” from Claude</li>
-              <li><strong>Branding:</strong> your organisation’s colours and icon, on screen and in print</li>
-              <li><strong>PDF export</strong> of docs and wiki pages</li>
+              <li><strong>AI in the app:</strong> chat about any page, <code>/ask</code> your notebook, and turn a PDF into a doc, run by your own Claude Code</li>
+              <li><strong>Sync now:</strong> refresh a brief from its sources in one click</li>
+              <li><strong>Unlimited drawings</strong></li>
+              <li><strong>Branding:</strong> your organisation’s colours and icon, on screen and in PDFs</li>
+              <li><strong>Other devices:</strong> open Remry on your phone or another computer</li>
             </ul>
             <a class="btn btn-primary" href="https://buy.stripe.com/bJefZg54rbNLa0H1sb0Jq01" data-track="buy-pro">Buy Remry Pro</a>
             <p class="fine">Checkout by Stripe. Your key is shown after you pay and emailed to you.</p>
@@ -370,7 +382,7 @@
         <div class="faq">
           <details>
             <summary>Which assistants does it work with?</summary>
-            <p>Claude, today: Claude desktop (Chat and Cowork) and Claude&nbsp;Code. Run Cowork sessions on your computer, not in the cloud, so Claude can reach your notebook.</p>
+            <p>Claude, today: Claude desktop (Chat and Cowork) and Claude&nbsp;Code. Run Cowork sessions on your computer, not in the cloud, so Claude can reach your notebook. The AI features inside the app (Pro) run Claude&nbsp;Code or GitHub Copilot&nbsp;CLI.</p>
           </details>
           <details>
             <summary>Which platforms does it run on?</summary>
@@ -378,11 +390,11 @@
           </details>
           <details>
             <summary>Can I open it on my phone or another computer?</summary>
-            <p>Yes, privately, over <a href="https://tailscale.com">Tailscale</a>. Install it on both devices, then choose <strong>Other devices → Turn on</strong> in Remry. Your notebook stays on your computer, which needs to be awake, and nothing is opened to the internet.</p>
+            <p>Yes, privately, over <a href="https://tailscale.com">Tailscale</a>. Install it on both devices, then choose <strong>Other devices → Turn on</strong> in Remry (a Pro feature). Your notebook stays on your computer, which needs to be awake, and nothing is opened to the internet.</p>
           </details>
           <details>
             <summary>What happens if my Pro license lapses?</summary>
-            <p>Search, branding and PDF export lock. Nothing else changes and no data is lost.</p>
+            <p>AI in the app, Sync now, branding and other devices lock, and you can’t add a fourth drawing. Your drawings stay editable, nothing else changes, and no data is lost.</p>
           </details>
           <details>
             <summary>Where is my data?</summary>
