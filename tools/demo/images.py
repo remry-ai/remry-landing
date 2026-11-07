@@ -8,7 +8,7 @@ if os.path.exists(f"{out}/poster.png"):
     Image.open(f"{out}/poster.png").convert("RGB").save(f"{dest}/demo-poster.webp", "WEBP", quality=85)
     Image.open(f"{out}/poster.png").convert("RGB").resize((960, 640), Image.LANCZOS).save(f"{dest}/demo-poster.png", optimize=True)
     Image.open(f"{out}/poster-m.png").convert("RGB").save(f"{dest}/demo-poster-m.webp", "WEBP", quality=85)
-for n in ["org-map", "person", "goal", "doc-charts", "home", "wiki-page"]:
+for n in ["org-map", "person", "goal", "doc-charts", "home", "wiki-page", "sync-brief", "sheet", "drawing"]:
     im = Image.open(f"{out}/{n}.png").convert("RGB")
     for w in (800, 1600):
         r = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)

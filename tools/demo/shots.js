@@ -15,6 +15,11 @@ const scrollTo = (sel, block = 'start') => async (p) => {
   await p.evaluate(([s, b]) => document.querySelector(s)?.scrollIntoView({ block: b }), [sel, block]);
   await p.waitForTimeout(400);
 };
+const scrollToBanner = async (p) => {
+  await p.getByText('Sync now').first().evaluate((e) => e.closest('.card, section, article, div')?.parentElement?.scrollIntoView({ block: 'start' }));
+  await p.evaluate(() => window.scrollBy(0, -60));
+  await p.waitForTimeout(400);
+};
 const openPanel = async (p) => { await p.locator('.drawer-toggle.right-toggle').click(); await p.waitForTimeout(700); };
 
 const SHOTS = [
@@ -24,6 +29,11 @@ const SHOTS = [
   { name: 'doc-charts', path: `/app/groups/${ids.Platform}?doc=${ids['Q3 review']}`, phone: scrollTo('canvas', 'center'), h: 700 },
   { name: 'home', path: '/app', h: 700 },
   { name: 'wiki-page', path: `/app/wiki/${ids.Datadog}`, h: 640 },
+  // The Sync banner (prompt, sources, Sync now) at the top, down to the Discrepancies on desktop.
+  { name: 'sync-brief', path: `/app/projects/${ids['New checkout']}?doc=${ids['New checkout brief']}`,
+    desktop: scrollToBanner, h: 700 },
+  { name: 'sheet', path: `/app/wiki/${ids.Software}`, h: 470 },
+  { name: 'drawing', path: `/app/wiki/${ids['Checkout architecture']}`, h: 560 },
 ];
 
 (async () => {
@@ -36,9 +46,10 @@ const SHOTS = [
       });
       const p = await ctx.newPage();
       await p.goto(BASE + s.path, { waitUntil: 'networkidle' });
-      await p.waitForTimeout(900);
+      await p.waitForTimeout(1500);
       if (s.both) await s.both(p);
       if (phone && s.phone) await s.phone(p);
+      if (!phone && s.desktop) await s.desktop(p);
       await p.waitForTimeout(500);
       await p.screenshot({ path: path.join(OUT, `${s.name}${phone ? '-m' : ''}.png`) });
       await ctx.close();

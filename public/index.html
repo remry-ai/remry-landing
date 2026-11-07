@@ -31,7 +31,7 @@
   <link rel="icon" href="/icons/icon-small.svg?v=dd78de96" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/images/demo-poster.webp?v=455dd9f2" as="image" type="image/webp">
-  <link rel="stylesheet" href="/styles.css?v=2ac31d8c">
+  <link rel="stylesheet" href="/styles.css?v=7f837502">
 
   <script src="/main.js?v=2aa25f68" defer></script>
   <!-- Privacy-friendly analytics by Plausible. Its setup is in /analytics.js (the CSP allows no inline scripts). -->
@@ -201,6 +201,48 @@
             </picture></a>
           </article>
         </div>
+        <h2 id="builtin-title" class="cases-title">Built in, not bolted on</h2>
+        <p class="section-lede">In Notion or Obsidian these come from plugins you find and set up. In Remry they come with the app, and Claude writes them.</p>
+        <div class="cases">
+          <article class="case case-wide">
+            <h3>A brief that stays current</h3>
+            <blockquote><span class="you">You:</span> Make a Checkout brief from the PRD, the Linear project and the pricing sheet. Flag where they disagree.</blockquote>
+            <p>Claude reads each source and writes one view, saying where each point comes from and ending with the discrepancies. The brief keeps its sources and its prompt, so the next refresh pulls the same parts, and each source shows when it was last synced. With Pro, <strong>Sync now</strong> refreshes it from the app.</p>
+            <a class="zoom" href="/images/sync-brief-1600.png?v=f1b34afc"><span class="sr-only">Open full size: </span>
+            <picture>
+              <source media="(max-width: 640px)" type="image/webp" srcset="/images/sync-brief-m.webp?v=1b40ab95" width="780" height="1400">
+              <source type="image/webp" srcset="/images/sync-brief-800.webp?v=ce869e4c 800w, /images/sync-brief-1600.webp?v=265a836d 1600w" sizes="(min-width: 1160px) 1064px, 92vw">
+              <img src="/images/sync-brief-1600.png?v=f1b34afc" width="1600" height="1000" loading="lazy" decoding="async"
+                   alt="A sync doc on the New checkout project: its prompt, three synced sources (a Notion PRD, a Linear project and a pricing sheet), Sync now, and the brief ending in a list of discrepancies.">
+            </picture></a>
+          </article>
+
+          <article class="case">
+            <h3>Spreadsheets</h3>
+            <blockquote><span class="you">You:</span> Put our software in a sheet: owner, seats, annual cost and cost per seat.</blockquote>
+            <p>Any wiki page or doc can be a spreadsheet, with formulas and currency formats. Ask what you spend and Claude reads the totals back.</p>
+            <a class="zoom" href="/images/sheet-1600.png?v=3f13220c"><span class="sr-only">Open full size: </span>
+            <picture>
+              <source media="(max-width: 640px)" type="image/webp" srcset="/images/sheet-m.webp?v=787562d8" width="780" height="940">
+              <source type="image/webp" srcset="/images/sheet-800.webp?v=184c43c5 800w, /images/sheet-1600.webp?v=d3d51ea3 1600w" sizes="(min-width: 960px) 560px, 92vw">
+              <img src="/images/sheet-1600.png?v=3f13220c" width="1600" height="1000" loading="lazy" decoding="async"
+                   alt="A Software spreadsheet: tools, owners, seats, annual cost and a per-seat formula, with a total row.">
+            </picture></a>
+          </article>
+
+          <article class="case">
+            <h3>Drawings, with Excalidraw</h3>
+            <blockquote><span class="you">You:</span> Draw the checkout architecture.</blockquote>
+            <p>Claude lays out the boxes and arrows. Open it to move things around in Excalidraw, full screen, or bring in an <code>.excalidraw</code> file or link. 3 free per notebook, unlimited with Pro.</p>
+            <a class="zoom" href="/images/drawing-1600.png?v=01fe238f"><span class="sr-only">Open full size: </span>
+            <picture>
+              <source media="(max-width: 640px)" type="image/webp" srcset="/images/drawing-m.webp?v=bf23373c" width="780" height="1120">
+              <source type="image/webp" srcset="/images/drawing-800.webp?v=8f02b98a 800w, /images/drawing-1600.webp?v=e4744413 1600w" sizes="(min-width: 960px) 560px, 92vw">
+              <img src="/images/drawing-1600.png?v=01fe238f" width="1600" height="1000" loading="lazy" decoding="async"
+                   alt="A hand-drawn Excalidraw diagram of the checkout architecture: web and mobile, API gateway, checkout service, payments, fraud scoring, orders DB and Stripe.">
+            </picture></a>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -210,11 +252,11 @@
         <h2 id="app-title">The app comes set up</h2>
         <p class="section-lede">In Notion or Obsidian you start on a blank page and build the templates, databases and plugins yourself. Remry has people, teams, projects, goals and docs built in, already linked.</p>
         <figure class="app-shot">
-          <a class="zoom" href="/images/home-1600.png?v=c53dcb95"><span class="sr-only">Open full size: </span>
+          <a class="zoom" href="/images/home-1600.png?v=391326c5"><span class="sr-only">Open full size: </span>
           <picture>
-            <source media="(max-width: 640px)" type="image/webp" srcset="/images/home-m.webp?v=0fd1253f" width="780" height="1400">
-            <source type="image/webp" srcset="/images/home-800.webp?v=ba4740de 800w, /images/home-1600.webp?v=e03e3efa 1600w" sizes="(min-width: 1160px) 1112px, 92vw">
-            <img src="/images/home-1600.png?v=c53dcb95" width="1600" height="1000" loading="lazy" decoding="async"
+            <source media="(max-width: 640px)" type="image/webp" srcset="/images/home-m.webp?v=33e4b7b5" width="780" height="1400">
+            <source type="image/webp" srcset="/images/home-800.webp?v=e30df859 800w, /images/home-1600.webp?v=9960279d 1600w" sizes="(min-width: 1160px) 1112px, 92vw">
+            <img src="/images/home-1600.png?v=391326c5" width="1600" height="1000" loading="lazy" decoding="async"
                  alt="The home dashboard: open todos and a feed of the latest updates.">
           </picture></a>
         </figure>
@@ -240,16 +282,8 @@
             <p>Press ⌘K and type a name, or <code>/search</code> to search every word.</p>
           </li>
           <li>
-            <h3>Spreadsheets</h3>
-            <p>For many records of one shape, with formulas and currency formats. Any doc or wiki page can be one.</p>
-          </li>
-          <li>
-            <h3>Excalidraw drawings</h3>
-            <p>Ask Claude for a diagram and it lays out the shapes and arrows. Open it to edit full screen.</p>
-          </li>
-          <li>
-            <h3>Briefs that stay current</h3>
-            <p>One write-up from the PRD, the Linear project and the pricing sheet, with where they disagree. Each source shows when it was last synced.</p>
+            <h3>Your Claude, in the app <span class="pro-tag">Pro</span></h3>
+            <p>Chat about the page you’re on, or <code>/ask</code> the whole notebook and get answers with links.</p>
           </li>
         </ul>
       </div>
