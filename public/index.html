@@ -329,7 +329,7 @@
           </li>
           <li>
             <h3>No AI keys</h3>
-            <p>Claude works on it from outside, and the AI features in the app run your own Claude Code. Apart from update checks, nothing leaves unless you share a drawing.</p>
+            <p>Claude works on it from outside, and the AI features in the app run your own Claude Code. Remry sends nothing about you or your notebooks. It checks for updates (you can turn that off), and reaches the internet otherwise only when you share a drawing, use the AI features, or a note links to an image on the web.</p>
           </li>
           <li>
             <h3>Offline license key</h3>
@@ -435,6 +435,10 @@
             <p><code>~/Library/Application Support/Remry/</code> on a Mac, <code>%LOCALAPPDATA%\Remry\</code> on Windows. It stays there if you uninstall.</p>
           </details>
           <details>
+            <summary>Can my IT team review it?</summary>
+            <p>Yes. <a href="https://github.com/remry-ai/remry/blob/main/docs/security.md">Security details</a> lists what Remry stores, every request it makes to the internet, what it listens on, and how it’s built and signed, each with the code that does it. <a href="https://github.com/remry-ai/remry/blob/main/SECURITY.md">SECURITY.md</a> says how to report a vulnerability. The update check can be turned off with <code>"checkForUpdates": false</code> in Remry’s <code>settings.json</code>, each release carries <code>SHA256SUMS</code>, and <code>remry uninstall</code> removes what Remry set up, leaving your notebooks.</p>
+          </details>
+          <details>
             <summary>Who makes it?</summary>
             <p><a href="https://jweatherby.dev">jweatherby.dev</a>, one person. The code is public on GitHub, and it changes often.</p>
           </details>
@@ -459,6 +463,7 @@
         <ul>
           <li><a href="https://github.com/remry-ai/remry">GitHub</a></li>
           <li><a href="https://github.com/remry-ai/remry/releases">All releases</a></li>
+          <li><a href="https://github.com/remry-ai/remry/blob/main/docs/security.md">Security</a></li>
           <li><a href="https://jweatherby.dev/contact">Contact</a></li>
         </ul>
       </nav>
